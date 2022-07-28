@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d31364ab95d1834597cfcfb22997a0c, type: 3}
+  m_Name: GameConf
+  m_EditorClassIdentifier: 
+  ballCat: {fileID: 669080569563698491, guid: 38f6f23d8e64c2b45b4442766361de76, type: 3}
+  longCat: {fileID: 9165413856402774868, guid: a7922053939c09e49aab0bfefcba4fc6, type: 3}
+  turkeyCat: {fileID: 770750698024638209, guid: 9f7b3ca3af73d44458bb549f542ff97e,
+    type: 3}
+  samuraiCat: {fileID: 985794255446110580, guid: 4edb223bdc6110743a847ca559dcd74c,
+    type: 3}
+  robot1: {fileID: 3580633075278753884, guid: 0a4afcba985408f4d90064f42efc64e2, type: 3}
