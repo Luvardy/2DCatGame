@@ -36,7 +36,7 @@ public class GridManager : MonoBehaviour
             // 由于这个预制体比较简单，所以直接用代码来定义，创建一个预制体网格
             GameObject prefabGrid = new GameObject();
             // 设置碰撞器大小
-            prefabGrid.AddComponent<BoxCollider2D>().size = new Vector2(1.83f, 1.80f);
+            prefabGrid.AddComponent<BoxCollider2D>().size = new Vector2(2f, 2f);
             // 父物体是网格管理器
             prefabGrid.transform.SetParent(transform);
             // 位置就是网格管理器的位置
@@ -47,7 +47,7 @@ public class GridManager : MonoBehaviour
                 for (int j = 0; j < 3; ++j)
                 {
                     // 每次实例时需要增加偏移量，让每个网格的上下和左右保持一定的距离
-                    GameObject grid = GameObject.Instantiate(prefabGrid, transform.position + new Vector3(1.97f * i, 1.96f * j, 0), Quaternion.identity);
+                    GameObject grid = GameObject.Instantiate(prefabGrid, transform.position + new Vector3(2f * i, 2f * j, 0), Quaternion.identity);
                     grid.name = i + "-" + j;
                 }
             }
@@ -62,7 +62,7 @@ public class GridManager : MonoBehaviour
             {
                 // 由于该脚本依附的游戏对象是在根目录，所以transform.position是世界坐标
                 GridList.Add(new Grid(new Vector2(i, j),
-                    transform.position + new Vector3(1.97f * i, 1.96f * j, 0), false));
+                    transform.position + new Vector3(2f * i, 2f * j, 0), false));
             }
         }
     }
@@ -73,7 +73,7 @@ public class GridManager : MonoBehaviour
             for (int j = 0; j < 3; ++j)
             {
                 // 将每个点预先保存在二维list中
-                pointList.Add(transform.position + new Vector3(1.97f * i, 1.96f * j, 0));
+                pointList.Add(transform.position + new Vector3(2f * i, 2f * j, 0));
             }
         }
     }

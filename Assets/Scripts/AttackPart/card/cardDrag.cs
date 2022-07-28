@@ -76,7 +76,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     {
         if(catInGrid != null)
         {
-            cat.transform.position = GridManager.instance.GetGridPointByMouse() + new Vector2(0f, 0.5f);
+            cat.transform.position = GridManager.instance.GetGridPointByMouse();
             cat.InitForPlace();
             cat = null;
             Destroy(catInGrid.gameObject);
@@ -122,12 +122,12 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
             {
                 if(catInGrid == null)
                 {
-                    catInGrid = Instantiate(cat, GridManager.instance.GetGridPointByMouse()+ new Vector2(0f, 0.5f), Quaternion.identity).GetComponent<CatBase>();
+                    catInGrid = Instantiate(cat, GridManager.instance.GetGridPointByMouse(), Quaternion.identity).GetComponent<CatBase>();
                     catInGrid.InitForCreate(true);
                 }
                 else
                 {
-                    catInGrid.transform.position = GridManager.instance.GetGridPointByMouse() + new Vector2(0f, 0.5f);
+                    catInGrid.transform.position = GridManager.instance.GetGridPointByMouse() ;
                 }
             }
             else
@@ -142,7 +142,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 
             if (Input.GetMouseButtonDown(0))
             {
-                cat.transform.position = GridManager.instance.GetGridPointByMouse() + new Vector2(0f, 0.5f);
+                cat.transform.position = GridManager.instance.GetGridPointByMouse();
                 cat.InitForPlace();
                 cat = null;
                 if(catInGrid != null)
