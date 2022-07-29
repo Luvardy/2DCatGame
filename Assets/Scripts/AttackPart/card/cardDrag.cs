@@ -4,7 +4,8 @@ using UnityEngine.EventSystems;
 public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public bool dragging = false;
-    private bool selectMode = true;
+    private static bool selectMode = true;
+    private static bool clicked = false;
     private cardPreview preView;
 
     private bool wantPlace;
@@ -52,7 +53,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     //拖拽模式
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left)
+        if (eventData.button == PointerEventData.InputButton.Left && !clicked)
         {
             if(!WantPlace)
             {
@@ -82,9 +83,12 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
             Destroy(catInGrid.gameObject);
             catInGrid = null;
         }
-        Debug.Log("松开鼠标左键");
-        selectMode = true;
-        EndThisDrag();
+        if(!clicked)
+        {
+            Debug.Log("松开鼠标左键");
+            EndThisDrag();
+        }
+
     }
 
     //选取模式
@@ -101,6 +105,8 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
             {
                 Debug.Log("选取");
                 dragging = true;
+                selectMode = false;
+                clicked = true;
                 //开始拖拽状态的预览
                 preView.DragPreview();
             }
@@ -114,20 +120,21 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
         if(WantPlace && cat != null)
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Grid grid = GridManager.instance.GetGridByMouse();
             if (dragging)
             {
                 cat.transform.position = new Vector3(mousePos.x, mousePos.y, transform.position.z);
             }
-            if (Vector2.Distance(mousePos, GridManager.instance.GetGridPointByMouse()) < 1.5f)
+            if (GridManager.instance.CheckNearKing () && Vector2.Distance(mousePos, grid.Position) < 1.5f)
             {
                 if(catInGrid == null)
                 {
-                    catInGrid = Instantiate(cat, GridManager.instance.GetGridPointByMouse(), Quaternion.identity).GetComponent<CatBase>();
+                    catInGrid = Instantiate(cat, grid.Position, Quaternion.identity).GetComponent<CatBase>();
                     catInGrid.InitForCreate(true);
                 }
                 else
                 {
-                    catInGrid.transform.position = GridManager.instance.GetGridPointByMouse() ;
+                    catInGrid.transform.position = grid.Position;
                 }
             }
             else
@@ -140,9 +147,9 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (catInGrid != null && Input.GetMouseButtonDown(0))
             {
-                cat.transform.position = GridManager.instance.GetGridPointByMouse();
+                cat.transform.position = grid.Position;
                 cat.InitForPlace();
                 cat = null;
                 if(catInGrid != null)
@@ -170,6 +177,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
             Debug.Log(2);
             if (dragging)
             {
+                clicked = false;
                 EndThisDrag();
             }
         }
@@ -181,6 +189,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
         Debug.Log("取消拖拽");
         dragging = false;
         preView.EndDrag();
+        selectMode = true;
         gameObject.GetComponent<CanvasGroup>().alpha = 1f;
         WantPlace = false;
 

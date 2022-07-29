@@ -11,13 +11,13 @@ public class Grid
     // 世界坐标
     public Vector2 Position;
 
-    // 是否有猫，如果有则不能召唤猫
-    public bool HaveKing;
+    // 是否靠近猫，如果是才可以放
+    public bool NearKing;
     // 构造函数
-    public Grid(Vector2 point, Vector2 position, bool haveKing)
+    public Grid(Vector2 point, Vector2 position, bool nearKing)
     {
         Point = point;
         Position = position;
-        HaveKing = haveKing;
+        NearKing = nearKing;
     }
 }

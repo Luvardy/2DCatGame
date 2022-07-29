@@ -7,8 +7,11 @@ public class GridManager : MonoBehaviour
 
     private List<Vector2> pointList = new List<Vector2>();
     private List<Grid> GridList = new List<Grid>();
+    private List<GameObject> RangeList = new List<GameObject>();
 
     public static GridManager instance;
+
+    public GameObject PlaceRange;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +27,7 @@ public class GridManager : MonoBehaviour
 
     private void Update()
     {
+        CheckNearKing();
         if (Input.GetMouseButtonDown(0))
         {
             print(GetGridPointByMouse());
@@ -80,18 +84,48 @@ public class GridManager : MonoBehaviour
 
     public Vector2 GetGridPointByMouse()
     {
+        return GetGridByMouse().Position;
+    }
+
+    public Grid GetGridByMouse()
+    {
         float dis = 999999;
-        Vector2 point = pointList[0];
+        Grid grid = null;
         for (int i = 0; i < GridList.Count; ++i)
         {
             float mouseToGrid = Vector2.Distance(Camera.main.ScreenToWorldPoint(Input.mousePosition), GridList[i].Position);
             if (mouseToGrid < dis)
             {
                 dis = mouseToGrid;
+                grid = GridList[i];
+            }
+        }
+        return grid;
+    }
+
+    public Vector2 GetGridPointByKing()
+    {
+        float dis = 999999;
+        Vector2 point = pointList[0];
+        for (int i = 0; i < GridList.Count; ++i)
+        {
+            float kingToGrid = Vector2.Distance(KingMove.instance.GetKingPos(), GridList[i].Position);
+            if (kingToGrid < dis)
+            {
+                dis = kingToGrid;
                 point = GridList[i].Position;
             }
         }
         return point;
     }
+
+    public bool CheckNearKing()
+    {
+        float kinglPosX = GetGridPointByKing().x;
+        if (GetGridPointByMouse().x - kinglPosX <= 6.01f && GetGridPointByMouse().x - kinglPosX >= -0.01f)
+            return true;
+        else return false;
+    }
+
 
 }
