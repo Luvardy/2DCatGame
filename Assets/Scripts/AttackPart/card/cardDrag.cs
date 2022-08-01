@@ -6,6 +6,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     public bool dragging = false;
     private static bool selectMode = true;
     private static bool clicked = false;
+    public static bool canPlace = false;
     private cardPreview preView;
 
     private bool wantPlace;
@@ -125,7 +126,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
             {
                 cat.transform.position = new Vector3(mousePos.x, mousePos.y, transform.position.z);
             }
-            if (GridManager.instance.CheckNearKing () && Vector2.Distance(mousePos, grid.Position) < 1.5f)
+            if (GridManager.instance.CheckCanPlace()&&GridManager.instance.CheckNearKing () && Vector2.Distance(mousePos, grid.Position) < 1.5f)
             {
                 if(catInGrid == null)
                 {

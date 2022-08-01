@@ -27,8 +27,9 @@ public class GridManager : MonoBehaviour
 
     private void Update()
     {
-        CheckNearKing();
-        if (Input.GetMouseButtonDown(0))
+        CheckCanPlace();
+        Debug.DrawLine(GetGridPointByMouse(), Vector2.right);
+        if (Input.GetMouseButton(0))
         {
             print(GetGridPointByMouse());
         }
@@ -41,18 +42,28 @@ public class GridManager : MonoBehaviour
             GameObject prefabGrid = new GameObject();
             // 设置碰撞器大小
             prefabGrid.AddComponent<BoxCollider2D>().size = new Vector2(2f, 2f);
+            prefabGrid.GetComponent<BoxCollider2D>().isTrigger = true;
             // 父物体是网格管理器
             prefabGrid.transform.SetParent(transform);
             // 位置就是网格管理器的位置
             prefabGrid.transform.position = this.transform.position;
             prefabGrid.name = 0 + "0" + 0;
-            for (int i = 0; i < 9; ++i)
+            for (int i = 0; i < 11; ++i)
             {
                 for (int j = 0; j < 3; ++j)
                 {
-                    // 每次实例时需要增加偏移量，让每个网格的上下和左右保持一定的距离
-                    GameObject grid = GameObject.Instantiate(prefabGrid, transform.position + new Vector3(2f * i, 2f * j, 0), Quaternion.identity);
-                    grid.name = i + "-" + j;
+                // 每次实例时需要增加偏移量，让每个网格的上下和左右保持一定的距离
+                RaycastHit2D info = Physics2D.Raycast(transform.position + new Vector3(2f * i, 2f * j, 0), Vector2.right, 0.1f);
+                    if(info.collider == null || info.collider.gameObject.tag != "Enemy")
+                    {
+                        GameObject grid = GameObject.Instantiate(prefabGrid, transform.position + new Vector3(2f * i, 2f * j, 0), Quaternion.identity);
+                        grid.name = i + "-" + j;
+                    }
+                    else
+                    {
+                    Debug.Log("Find Enemy At" + i + "-" + j);
+                    }
+
                 }
             }
         }
@@ -60,7 +71,7 @@ public class GridManager : MonoBehaviour
 
     private void CreateGridsBaseGrid()
     {
-        for (int i = 0; i < 9; ++i)
+        for (int i = 0; i < 11; ++i)
         {
             for (int j = 0; j < 3; ++j)
             {
@@ -72,7 +83,7 @@ public class GridManager : MonoBehaviour
     }
     private void CreateGridsBasePointList()
     {
-        for (int i = 0; i < 9; ++i)
+        for (int i = 0; i < 11; ++i)
         {
             for (int j = 0; j < 3; ++j)
             {
@@ -126,6 +137,25 @@ public class GridManager : MonoBehaviour
             return true;
         else return false;
     }
+
+    public bool CheckCanPlace()
+    {
+        RaycastHit2D info = Physics2D.Raycast(GetGridPointByMouse(), Vector2.right, 0.1f);
+        Debug.DrawLine(GetGridPointByMouse(),Vector2.right,Color.red,0.1f);
+        if (info.collider!=null)
+        {
+            if (info.collider.gameObject.tag == "Enemy")
+            {
+                Debug.Log("FindEnemy");
+                return false;
+            }
+            else
+                return true;
+        }
+        return true;
+
+    }
+
 
 
 }
