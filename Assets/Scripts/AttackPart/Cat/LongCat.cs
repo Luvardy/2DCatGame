@@ -15,6 +15,10 @@ public class LongCat : CatBase
     protected override void OnInitForPlace()
     {
         canJump = true;
+        HP = 30f;
+        AttackPrice = hp;//撞击敌人自损血量
+        catCost = 2;
+        PlayerManager.instance.CatNeedCost(catCost);
     }
 
     private void DetectEnemy()

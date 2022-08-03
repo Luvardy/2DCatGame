@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5712060093807166405}
   m_Layer: 0
   m_Name: BallCat
-  m_TagString: Untagged
+  m_TagString: Cat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 669080569563698491}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -373.66672, y: -202.27829, z: -36.2125}
+  m_LocalPosition: {x: 0, y: 0, z: -6.2}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -93,6 +93,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7f06e2bc5d49c4ea46bebd1d6a8ab4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp: 20
+  attackPrice: 0
 --- !u!61 &5712060093807166405
 BoxCollider2D:
   m_ObjectHideFlags: 0

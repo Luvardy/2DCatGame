@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 114397966859072058}
   m_Layer: 0
   m_Name: SamuraiCat
-  m_TagString: Untagged
+  m_TagString: Cat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -92,3 +92,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f3298fcc92728944ac0594d579227cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp: 20

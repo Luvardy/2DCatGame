@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 95868189257740238}
   m_Layer: 0
   m_Name: LongCat
-  m_TagString: Untagged
+  m_TagString: Cat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d624b54406226aa4c9c219957cf7ae62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp: 20
 --- !u!95 &95868189257740238
 Animator:
   serializedVersion: 3

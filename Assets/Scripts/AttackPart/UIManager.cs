@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
     private Text unitCatNum;
+    private Image hpFill;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,11 +18,23 @@ public class UIManager : MonoBehaviour
 
 
         unitCatNum = transform.Find("UnitCat/UnitCatNum").GetComponent<Text>();
+        hpFill = transform.Find("BlackHP/HP").GetComponent<Image>();
 
     }
 
     public void UpdateCatNum(int num)
     {
         unitCatNum.text = num.ToString();
+    }
+
+    public void HpChange(float valuePercent)
+    {
+        if(hpFill != null)
+        {
+            Debug.Log(hpFill.name);
+
+            hpFill.fillAmount = valuePercent;
+
+        }
     }
 }

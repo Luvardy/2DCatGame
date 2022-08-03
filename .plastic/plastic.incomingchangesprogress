@@ -1,0 +1,20 @@
+[
+  {
+    "MountId": "56e62dd7-241f-41e9-8c6b-dd4ca4513e62",
+    "AncestorCsetIds": [
+      130
+    ],
+    "SourceCsetId": 131,
+    "DestinationCsetId": 130,
+    "FileConflicts": [
+      {
+        "Path": "/Assets/Scripts/AttackPart/KingMove.cs",
+        "ItemId": 1145,
+        "ParentItemId": 885,
+        "BaseRevId": 2303,
+        "SourceRevId": 2308,
+        "DestinationRevId": 2303
+      }
+    ]
+  }
+]

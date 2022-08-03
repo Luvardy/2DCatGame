@@ -78,7 +78,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     {
         if(catInGrid != null)
         {
-            cat.transform.position = GridManager.instance.GetGridPointByMouse();
+            cat.transform.position = GridManager.instance.GetGridByMouse().Position;
             cat.InitForPlace();
             cat = null;
             Destroy(catInGrid.gameObject);

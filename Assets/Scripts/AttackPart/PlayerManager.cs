@@ -34,4 +34,9 @@ public class PlayerManager : MonoBehaviour
             isStart = true;
         }
     }
+
+    public void CatNeedCost(int cost)
+    {
+        CatNum -= cost;
+    }
 }

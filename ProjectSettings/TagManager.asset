@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Cat
+  - Grid
+  - Wall
+  - Spite
+  - Switch
+  - Boom
   layers:
   - Default
   - TransparentFX
@@ -14,8 +20,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Enemy
+  - Wall
   - 
   - 
   - 
