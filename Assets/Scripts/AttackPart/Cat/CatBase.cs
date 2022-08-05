@@ -103,19 +103,23 @@ public class CatBase : MonoBehaviour
     private void DetectEnemy()
     {
         Vector2 start = transform.position;
-        RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(1f, 0f));
+        RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(0.5f, 0f), ~(1 << 0));
         Debug.DrawLine(start, start + new Vector2(1f, 0f), Color.red);
         if (isAttackState) return;
+        if(info.collider != null)
+        {
+            Debug.Log(info.collider.gameObject.name);
+        }
         if (info.collider != null && info.collider.gameObject.tag == "Enemy")
         {
             currCat = info.collider.gameObject;
             State = CatState.Attack;
         }
-        else if (info.collider.gameObject.tag == "Wall")
+        else if (info.collider != null && info.collider.gameObject.tag == "Wall")
         {
             return;
         }
-        else if (info.collider.gameObject.tag == "Switch")
+        else if (info.collider != null && info.collider.gameObject.tag == "Switch")
         {
             WallSwitch _switch = info.collider.gameObject.GetComponent<WallSwitch>();
             _switch.SwitchOn();
@@ -137,6 +141,11 @@ public class CatBase : MonoBehaviour
         {
             if (isOnSpite) return;
             StartCoroutine("StepOnSpite");
+        }
+        else if (info.collider.gameObject.tag == "Boom")
+        {
+            Hurt(150);
+            Destroy(info.collider.gameObject);
         }
         else
         {
