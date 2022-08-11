@@ -2,19 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LongCat : CatBase
+public class BallCat1 : CatBase
 {
+
+
+
+
+
     private void Update()
     {
         FSM();
     }
     protected override void OnInitForPlace()
     {
-        HP = 30f;
-        AttackPrice = hp;//撞击敌人自损血量
-        catCost = 2;
+        Debug.Log("?");
+        HP = 40f;
+        AttackPrice = hp;
+        attackValue = 100f;
+        catCost = 1;
         State = CatState.Move;
-        PlayerManager.instance.CatNeedCost(catCost);
+        PlayerManager1.instance.CatNeedCost(catCost);
+
     }
+
 
 }

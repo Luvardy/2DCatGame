@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager1 : MonoBehaviour
 {
-    public static PlayerManager instance;
+    public static PlayerManager1 instance;
     public int unitNum;
     private bool isStart = false;
     private int catNum;
@@ -15,13 +15,13 @@ public class PlayerManager : MonoBehaviour
         set
         {
             catNum = value;
-            UIManager.instance.UpdateCatNum(catNum);
+            UIManager1.instance.UpdateCatNum(catNum);
         }
     }
 
     private void Start()
     {
-        if(!instance)
+        if (!instance)
         {
             instance = this;
         }
@@ -29,7 +29,7 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!isStart)
+        if (!isStart)
         {
             CatNum = unitNum;
             isStart = true;

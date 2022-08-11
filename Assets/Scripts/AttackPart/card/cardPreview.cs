@@ -69,7 +69,6 @@ public class cardPreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     //结束拖拽
     public void EndDrag()
     {
-        transform.position = savePos;
         transform.localScale = Vector3.one;
         cv.sortingOrder = saveOrder;
         CheckHoverInThisCrd();
@@ -101,7 +100,7 @@ public class cardPreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         if (!dragNoTarget.dragging)
         {
-            savePos = transform.position;
+            //savePos = transform.position;
             saveOrder = cv.sortingOrder;
         }
     }

@@ -106,10 +106,7 @@ public class CatBase : MonoBehaviour
         RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(0.5f, 0f), ~(1 << 0));
         Debug.DrawLine(start, start + new Vector2(1f, 0f), Color.red);
         if (isAttackState) return;
-        if(info.collider != null)
-        {
-            Debug.Log(info.collider.gameObject.name);
-        }
+
         if (info.collider != null && info.collider.gameObject.tag == "Enemy")
         {
             currCat = info.collider.gameObject;
@@ -137,12 +134,16 @@ public class CatBase : MonoBehaviour
         Vector2 start = transform.position;
         RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(0f, -0.5f));
         Debug.DrawLine(start, start + new Vector2(0f, -0.5f), Color.red);
+        if (info.collider != null)
+        {
+            Debug.Log(info.collider.gameObject.name);
+        }
         if (info.collider != null && info.collider.gameObject.tag == "Spite")
         {
             if (isOnSpite) return;
             StartCoroutine("StepOnSpite");
         }
-        else if (info.collider.gameObject.tag == "Boom")
+        else if (info.collider != null && info.collider.gameObject.tag == "Boom")
         {
             Hurt(150);
             Destroy(info.collider.gameObject);

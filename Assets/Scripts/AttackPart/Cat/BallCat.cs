@@ -22,6 +22,7 @@ public class BallCat : CatBase
         catCost = 1;
         State = CatState.Move;
         PlayerManager.instance.CatNeedCost(catCost);
+
     }
 
 

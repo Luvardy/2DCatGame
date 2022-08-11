@@ -38,44 +38,88 @@ public class KingMove : MonoBehaviour
     {
         DetectSpite();
         DetectEnemy();
-        CheckCanMove();
+        if(ShowCard.disapear)
+        {
+            CheckCanMove();
+        }
+        else
+        {
+            transform.position = GridManager.instance.GetGridPointByKing() + new Vector2(0f, 0.5f);
+        }
 
-        
+
     }
 
     public Vector2 GetKingPos()
     {
-        return transform.position;
+        return (Vector2)transform.position + new Vector2(0f, -0.58f);
     }
 
     //检测王前面有无敌人 是否可以继续前进
     private void CheckCanMove()
     {
-        Vector2 start = (Vector2)transform.position + new Vector2(-0.2f, 0f);
+        Vector2 start = (Vector2)transform.position + new Vector2(0f, -0.3f);
 
-        RaycastHit2D checkUp = Physics2D.Linecast(start, start + new Vector2(0f, 2f), LayerMask.GetMask("Wall"));
-        RaycastHit2D checkDown = Physics2D.Linecast(start, start + new Vector2(0f, -2f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkUpLeft = Physics2D.Linecast(start + new Vector2(-0.2f, 0f), start + new Vector2(-0.2f, 0.3f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkUpRight = Physics2D.Linecast(start + new Vector2(0.2f, 0f), start + new Vector2(0.2f, 0.3f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkUp = Physics2D.Linecast(start, start + new Vector2(0f, 0.3f), LayerMask.GetMask("Wall"));
 
-        Debug.DrawLine(start, start + new Vector2(4f, 0f),Color.red);
-        Debug.DrawLine(start, start + new Vector2(0f, 2f), Color.red);
-        Debug.DrawLine(start, start + new Vector2(0f, -2f), Color.red);
+        RaycastHit2D checkDownLeft = Physics2D.Linecast(start + new Vector2(-0.2f,0f), start + new Vector2(-0.2f, -0.5f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkDownRight = Physics2D.Linecast(start + new Vector2(0.2f, 0f), start + new Vector2(0.2f, -0.5f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.5f), LayerMask.GetMask("Wall"));
 
-        if (Input.GetKeyDown(KeyCode.W))
+        RaycastHit2D checkRightDown = Physics2D.Linecast(start + new Vector2(0f,-0.25f), start + new Vector2(0.5f,-0.25f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkRightUp = Physics2D.Linecast(start + new Vector2(0f,0.25f), start + new Vector2(0.5f,0.25f), LayerMask.GetMask("Wall"));
+
+        RaycastHit2D checkLeftDown = Physics2D.Linecast(start + new Vector2(0,-0.25f), start + new Vector2(-0.2f, -0.25f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkLeftUp = Physics2D.Linecast(start + new Vector2(0, 0.25f), start + new Vector2(-0.2f, 0.25f), LayerMask.GetMask("Wall"));
+
+        Debug.DrawLine(start + new Vector2(-0.2f, 0f), start + new Vector2(-0.2f, 0.3f), Color.red);
+        Debug.DrawLine(start + new Vector2(0.2f, 0f), start + new Vector2(0.2f, 0.3f), Color.red);
+        Debug.DrawLine(start, start + new Vector2(0f, 0.3f), Color.red);
+
+        Debug.DrawLine(start + new Vector2(-0.2f, 0f), start + new Vector2(-0.2f, -0.5f), Color.red);
+        Debug.DrawLine(start + new Vector2(0.2f, 0f), start + new Vector2(0.2f, -0.5f), Color.red);
+        Debug.DrawLine(start, start + new Vector2(0f, -0.5f), Color.red);
+
+        Debug.DrawLine(start + new Vector2(0f, -0.25f), start + new Vector2(0.5f, -0.25f), Color.red);
+        Debug.DrawLine(start + new Vector2(0f, 0.25f), start + new Vector2(0.5f, 0.25f), Color.red);
+
+        Debug.DrawLine(start + new Vector2(0, -0.25f), start + new Vector2(-0.2f, -0.25f), Color.red);
+        Debug.DrawLine(start + new Vector2(0, 0.25f), start + new Vector2(-0.2f, 0.25f), Color.red);
+
+
+        if (Input.GetKey(KeyCode.A))
         {
-            if (transform.position.y >= borderUp || checkUp.collider != null)
+            if (checkLeftUp.collider == null && checkLeftDown.collider == null)
+            {
+                transform.Translate(Vector2.left * moveSpeed * Time.deltaTime);
+            }
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            if (checkRightUp.collider == null && checkRightDown.collider == null)
+            {
+                transform.Translate(Vector2.right * moveSpeed * Time.deltaTime);
+            }
+        }
+        if (Input.GetKey(KeyCode.W))
+        {
+            if (transform.position.y >= borderUp || checkUpLeft.collider != null || checkUpRight.collider != null || checkUp.collider != null)
             {
                 return;
             }
-            transform.Translate(Vector2.up * 1.2f);
+            transform.Translate(Vector2.up * moveSpeed * Time.deltaTime);
         }
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKey(KeyCode.S))
         {
-            if (transform.position.y <= borderDown || checkDown.collider != null)
+            if (transform.position.y <= borderDown || checkDownLeft.collider != null || checkDownRight.collider != null || checkDown.collider != null)
             {
                 return;
             }
-            transform.Translate(Vector2.down * 1.2f);
+            transform.Translate(Vector2.down * moveSpeed * Time.deltaTime);
         }
+
 
 
     }
@@ -84,7 +128,7 @@ public class KingMove : MonoBehaviour
     {
         Vector2 start = (Vector2)transform.position + new Vector2(0f,-0.5f);
         RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(0.5f, 0f),~(1<<0));
-        Debug.DrawLine(start, start + new Vector2(0.5f, 0f), Color.red);
+        Debug.DrawLine(start, start + new Vector2(0.5f, 0f), Color.blue);
         if (isAttackState) return;
         if (info.collider != null)
         {
@@ -94,20 +138,11 @@ public class KingMove : MonoBehaviour
         {
             Attack(info.collider.gameObject);
         }
-        else if (info.collider != null && info.collider.gameObject.tag == "Wall")
-        {
-            return;
-        }
         else if (info.collider != null && info.collider.gameObject.tag == "Switch")
         {
             Debug.Log("open");
             WallSwitch _switch = info.collider.gameObject.GetComponent<WallSwitch>();
             _switch.SwitchOn();
-            transform.Translate(Vector2.right * moveSpeed * Time.deltaTime);
-        }
-        else
-        {
-            transform.Translate(Vector2.right * moveSpeed * Time.deltaTime);
         }
     }
 
@@ -132,14 +167,18 @@ public class KingMove : MonoBehaviour
     private void DetectSpite()
     {
         Vector2 start = transform.position;
-        RaycastHit2D info = Physics2D.Linecast(start + new Vector2(0f,-0.3f), start + new Vector2(0f, -0.5f));
-        Debug.DrawLine(start, start + new Vector2(0f, -1f), Color.red);
+        RaycastHit2D info = Physics2D.Linecast(start + new Vector2(0f,-0.3f), start + new Vector2(0f, -0.5f),LayerMask.GetMask("Trap"));
+        Debug.DrawLine(start, start + new Vector2(0f, -1f), Color.blue);
+        if (info.collider != null )
+        {
+            Debug.Log("I am step on" + info.collider.gameObject.name);
+        }
         if (info.collider != null && info.collider.gameObject.tag == "Spite")
         {
             if (isOnSpite) return;
             StartCoroutine("StepOnSpite");
         }
-        else if(info.collider.gameObject.tag == "Boom")
+        else if(info.collider != null && info.collider.gameObject.tag == "Boom")
         {
             Hurt(150);
             Destroy(info.collider.gameObject);
