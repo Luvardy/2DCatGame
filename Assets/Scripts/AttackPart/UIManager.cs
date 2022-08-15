@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviour
 
 
         unitCatNum = transform.Find("UnitCat/UnitCatNum").GetComponent<Text>();
-        hpFill = transform.Find("BlackHP/HP").GetComponent<Image>();
+        hpFill = transform.Find("HP").GetComponent<Image>();
 
     }
 

@@ -22,7 +22,7 @@ public class ShowCard : MonoBehaviour
 
         if (!disapear)
         { 
-            if(transform.position.y > 1030f)
+            if(transform.position.y > 980f)
             {
                 transform.Translate(Vector2.down * 400 * Time.deltaTime); 
             }

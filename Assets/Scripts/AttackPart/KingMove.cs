@@ -60,33 +60,33 @@ public class KingMove : MonoBehaviour
     {
         Vector2 start = (Vector2)transform.position + new Vector2(0f, -0.3f);
 
-        RaycastHit2D checkUpLeft = Physics2D.Linecast(start + new Vector2(-0.2f, 0f), start + new Vector2(-0.2f, 0.3f), LayerMask.GetMask("Wall"));
-        RaycastHit2D checkUpRight = Physics2D.Linecast(start + new Vector2(0.2f, 0f), start + new Vector2(0.2f, 0.3f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkUpLeft = Physics2D.Linecast(start + new Vector2(-0.15f, 0f), start + new Vector2(-0.15f, 0.3f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkUpRight = Physics2D.Linecast(start + new Vector2(0.15f, 0f), start + new Vector2(0.15f, 0.3f), LayerMask.GetMask("Wall"));
         RaycastHit2D checkUp = Physics2D.Linecast(start, start + new Vector2(0f, 0.3f), LayerMask.GetMask("Wall"));
 
-        RaycastHit2D checkDownLeft = Physics2D.Linecast(start + new Vector2(-0.2f,0f), start + new Vector2(-0.2f, -0.5f), LayerMask.GetMask("Wall"));
-        RaycastHit2D checkDownRight = Physics2D.Linecast(start + new Vector2(0.2f, 0f), start + new Vector2(0.2f, -0.5f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkDownLeft = Physics2D.Linecast(start + new Vector2(-0.15f,0f), start + new Vector2(-0.15f, -0.5f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkDownRight = Physics2D.Linecast(start + new Vector2(0.15f, 0f), start + new Vector2(0.15f, -0.5f), LayerMask.GetMask("Wall"));
         RaycastHit2D checkDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.5f), LayerMask.GetMask("Wall"));
 
         RaycastHit2D checkRightDown = Physics2D.Linecast(start + new Vector2(0f,-0.25f), start + new Vector2(0.5f,-0.25f), LayerMask.GetMask("Wall"));
         RaycastHit2D checkRightUp = Physics2D.Linecast(start + new Vector2(0f,0.25f), start + new Vector2(0.5f,0.25f), LayerMask.GetMask("Wall"));
 
-        RaycastHit2D checkLeftDown = Physics2D.Linecast(start + new Vector2(0,-0.25f), start + new Vector2(-0.2f, -0.25f), LayerMask.GetMask("Wall"));
-        RaycastHit2D checkLeftUp = Physics2D.Linecast(start + new Vector2(0, 0.25f), start + new Vector2(-0.2f, 0.25f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkLeftDown = Physics2D.Linecast(start + new Vector2(0,-0.25f), start + new Vector2(-0.3f, -0.25f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkLeftUp = Physics2D.Linecast(start + new Vector2(0, 0.25f), start + new Vector2(-0.3f, 0.25f), LayerMask.GetMask("Wall"));
 
-        Debug.DrawLine(start + new Vector2(-0.2f, 0f), start + new Vector2(-0.2f, 0.3f), Color.red);
-        Debug.DrawLine(start + new Vector2(0.2f, 0f), start + new Vector2(0.2f, 0.3f), Color.red);
+        Debug.DrawLine(start + new Vector2(-0.15f, 0f), start + new Vector2(-0.15f, 0.3f), Color.red);
+        Debug.DrawLine(start + new Vector2(0.15f, 0f), start + new Vector2(0.15f, 0.3f), Color.red);
         Debug.DrawLine(start, start + new Vector2(0f, 0.3f), Color.red);
 
-        Debug.DrawLine(start + new Vector2(-0.2f, 0f), start + new Vector2(-0.2f, -0.5f), Color.red);
-        Debug.DrawLine(start + new Vector2(0.2f, 0f), start + new Vector2(0.2f, -0.5f), Color.red);
+        Debug.DrawLine(start + new Vector2(-0.15f, 0f), start + new Vector2(-0.15f, -0.5f), Color.red);
+        Debug.DrawLine(start + new Vector2(0.15f, 0f), start + new Vector2(0.15f, -0.5f), Color.red);
         Debug.DrawLine(start, start + new Vector2(0f, -0.5f), Color.red);
 
         Debug.DrawLine(start + new Vector2(0f, -0.25f), start + new Vector2(0.5f, -0.25f), Color.red);
         Debug.DrawLine(start + new Vector2(0f, 0.25f), start + new Vector2(0.5f, 0.25f), Color.red);
 
-        Debug.DrawLine(start + new Vector2(0, -0.25f), start + new Vector2(-0.2f, -0.25f), Color.red);
-        Debug.DrawLine(start + new Vector2(0, 0.25f), start + new Vector2(-0.2f, 0.25f), Color.red);
+        Debug.DrawLine(start + new Vector2(0, -0.25f), start + new Vector2(-0.3f, -0.25f), Color.red);
+        Debug.DrawLine(start + new Vector2(0, 0.25f), start + new Vector2(-0.3f, 0.25f), Color.red);
 
 
         if (Input.GetKey(KeyCode.A))
@@ -105,7 +105,7 @@ public class KingMove : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.W))
         {
-            if (transform.position.y >= borderUp || checkUpLeft.collider != null || checkUpRight.collider != null || checkUp.collider != null)
+            if ( checkUpLeft.collider != null || checkUpRight.collider != null || checkUp.collider != null)
             {
                 return;
             }
@@ -113,7 +113,7 @@ public class KingMove : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.S))
         {
-            if (transform.position.y <= borderDown || checkDownLeft.collider != null || checkDownRight.collider != null || checkDown.collider != null)
+            if (checkDownLeft.collider != null || checkDownRight.collider != null || checkDown.collider != null)
             {
                 return;
             }

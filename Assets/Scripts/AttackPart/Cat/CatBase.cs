@@ -87,6 +87,7 @@ public class CatBase : MonoBehaviour
                 Debug.Log("???");
                 break;
             case CatState.Move:
+                MoveCat();
                 DetectEnemy();
                 DetectSpite();
                 break;
@@ -97,6 +98,31 @@ public class CatBase : MonoBehaviour
             case CatState.Dead:
                 Dead();
                 break;
+        }
+    }
+
+    private void MoveCat()
+    {
+        Vector2 start = transform.position;
+        RaycastHit2D infoFront = Physics2D.Linecast(start, start + new Vector2(0.5f, 0f), ~(1 << 0));
+        RaycastHit2D infoUp = Physics2D.Linecast(start, start + new Vector2(0f, 0.5f), ~(1 << 0));
+        RaycastHit2D infoDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.5f), ~(1 << 0));
+
+        if(infoFront.collider != null)
+        {
+            if(infoDown.collider == null)
+            {
+                transform.Translate(Vector2.down * 1f * Time.deltaTime);
+            }
+            else if(infoUp.collider == null)
+            {
+                transform.Translate(Vector2.up * 1f * Time.deltaTime);
+            }
+            return;
+        }
+        else
+        {
+            transform.Translate(Vector2.right * 1f * Time.deltaTime);
         }
     }
 
@@ -120,13 +146,13 @@ public class CatBase : MonoBehaviour
         {
             WallSwitch _switch = info.collider.gameObject.GetComponent<WallSwitch>();
             _switch.SwitchOn();
-            transform.Translate(Vector2.right * 1f * Time.deltaTime);
+            //transform.Translate(Vector2.right * 1f * Time.deltaTime);
 
         }
-        else
-        {
-            transform.Translate(Vector2.right * 1f * Time.deltaTime);
-        }
+        //else
+        //{
+        //    transform.Translate(Vector2.right * 1f * Time.deltaTime);
+        //}
     }
 
     private void DetectSpite()
