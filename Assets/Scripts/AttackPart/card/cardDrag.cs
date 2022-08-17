@@ -54,7 +54,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     //拖拽模式
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left && !clicked)
+        if (!ArrowManager.isEditing && eventData.button == PointerEventData.InputButton.Left && !clicked)
         {
             if(!WantPlace)
             {
@@ -96,7 +96,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     public void OnPointerClick(PointerEventData eventData)
     {
         //点击鼠标左键
-        if (selectMode && eventData.button == PointerEventData.InputButton.Left)
+        if (!ArrowManager.isEditing && selectMode && eventData.button == PointerEventData.InputButton.Left)
         {
             if (!WantPlace)
             {

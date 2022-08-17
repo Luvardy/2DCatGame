@@ -42,7 +42,7 @@ public class cardPreview : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         SaveCardSate();
         Debug.Log("开始预览");
-        if (EnablePreview)
+        if (EnablePreview && !ArrowManager.isEditing)
         {
             StartPreView();
         }

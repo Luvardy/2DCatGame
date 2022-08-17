@@ -16,10 +16,11 @@ public class BallCat : CatBase
     protected override void OnInitForPlace()
     {
         Debug.Log("?");
-        HP = 40f;
+        HP = 100f;
         AttackPrice = hp;
-        attackValue = 100f;
+        attackValue = 0f;
         catCost = 1;
+        catSpeed = 3f;
         State = CatState.Move;
         PlayerManager.instance.CatNeedCost(catCost);
 

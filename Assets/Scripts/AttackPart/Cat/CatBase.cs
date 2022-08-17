@@ -26,7 +26,9 @@ public class CatBase : MonoBehaviour
     public float hp;
     public float attackPrice;
     public float attackValue;
+    public float catSpeed;
 
+    public Vector2 myDir = Vector2.right;
 
     public GameObject currCat;
 
@@ -101,36 +103,89 @@ public class CatBase : MonoBehaviour
         }
     }
 
-    private void MoveCat()
+    protected virtual void MoveCat()
     {
-        Vector2 start = transform.position;
-        RaycastHit2D infoFront = Physics2D.Linecast(start, start + new Vector2(0.5f, 0f), ~(1 << 0));
-        RaycastHit2D infoUp = Physics2D.Linecast(start, start + new Vector2(0f, 0.5f), ~(1 << 0));
-        RaycastHit2D infoDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.5f), ~(1 << 0));
+        Vector2 start = (Vector2)transform.position;
+        RaycastHit2D infoWay;
+        RaycastHit2D infoWayLeft = Physics2D.Linecast(start + new Vector2(.3f,0f), start + new Vector2(.4f, 0f),1<<12);
+        RaycastHit2D infoWayRight = Physics2D.Linecast(start + new Vector2(-.3f,0f), start + new Vector2(-.4f, 0f),1<<12);
+        RaycastHit2D infoWayUp = Physics2D.Linecast(start + new Vector2(0f,-.3f), start + new Vector2(0f, -.4f),1<<12);
+        RaycastHit2D infoWayDown = Physics2D.Linecast(start + new Vector2(0f,.3f), start + new Vector2(0f, .4f),1<<12);
 
-        if(infoFront.collider != null)
+        RaycastHit2D infoWallRight = Physics2D.Linecast(start, start + new Vector2(0.4f, 0f),1<<9 |1 << 8);
+        RaycastHit2D infoWallLeft = Physics2D.Linecast(start, start + new Vector2(-0.4f, 0f),1<<9 |1 << 8);
+        RaycastHit2D infoWallUp = Physics2D.Linecast(start, start + new Vector2(0f, 0.4f),1<<9 | 1 << 8);
+        RaycastHit2D infoWallDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.4f),1<<9 | 1 << 8);
+
+        Debug.DrawLine(start + new Vector2(.45f, 0f), start + new Vector2(.5f, 0f), Color.red);
+        Debug.DrawLine(start + new Vector2(-.45f, 0f), start + new Vector2(-.5f, 0f), Color.red);
+        Debug.DrawLine(start + new Vector2(0f, .45f), start + new Vector2(0f, .5f), Color.red);
+        Debug.DrawLine(start + new Vector2(0f, -.45f), start + new Vector2(0f, -.5f), Color.red);
+
+        Debug.DrawLine(start, start + new Vector2(0.4f, 0f), Color.blue);
+        Debug.DrawLine(start, start + new Vector2(-0.4f, 0f), Color.blue);
+        Debug.DrawLine(start, start + new Vector2(0f, 0.4f), Color.blue);
+        Debug.DrawLine(start, start + new Vector2(0f, -0.4f), Color.blue);
+        if (myDir == Vector2.left)
         {
-            if(infoDown.collider == null)
-            {
-                transform.Translate(Vector2.down * 1f * Time.deltaTime);
-            }
-            else if(infoUp.collider == null)
-            {
-                transform.Translate(Vector2.up * 1f * Time.deltaTime);
-            }
-            return;
+            infoWay = infoWayLeft;
+        }
+        else if(myDir == Vector2.right)
+        {
+            infoWay = infoWayRight;
+        }
+        else if(myDir == Vector2.up)
+        {
+            infoWay = infoWayUp;
         }
         else
         {
-            transform.Translate(Vector2.right * 1f * Time.deltaTime);
+            infoWay = infoWayDown;
         }
+
+        if (infoWay.collider != null)
+        {
+            switch (infoWay.collider.gameObject.tag)
+            {
+                case "Left":
+                    myDir = Vector2.left;
+                    break;
+                case "Right":
+                    myDir = Vector2.right;
+                    break;
+                case "Up":
+                    myDir = Vector2.up;
+                    break;
+                case "Down":
+                    myDir = Vector2.down;
+                    break;
+            }
+            if (infoWallRight.collider != null || infoWallLeft.collider != null || infoWallDown.collider != null || infoWallUp.collider != null)
+            {
+                myDir = Vector2.zero;
+            }
+            transform.Translate(myDir * catSpeed * Time.deltaTime);
+        }
+        else if (infoWallRight.collider != null || infoWallLeft.collider != null|| infoWallDown.collider != null || infoWallUp.collider != null)
+            {
+                myDir = Vector2.zero;
+            }
+        else
+        {
+            transform.Translate(myDir * catSpeed * Time.deltaTime);
+        }
+    }
+
+    private void checkMoveWay(Vector2 dir)
+    {
+
     }
 
     private void DetectEnemy()
     {
         Vector2 start = transform.position;
         RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(0.5f, 0f), ~(1 << 0));
-        Debug.DrawLine(start, start + new Vector2(1f, 0f), Color.red);
+        
         if (isAttackState) return;
 
         if (info.collider != null && info.collider.gameObject.tag == "Enemy")
@@ -160,10 +215,10 @@ public class CatBase : MonoBehaviour
         Vector2 start = transform.position;
         RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(0f, -0.5f));
         Debug.DrawLine(start, start + new Vector2(0f, -0.5f), Color.red);
-        if (info.collider != null)
-        {
-            Debug.Log(info.collider.gameObject.name);
-        }
+        //if (info.collider != null)
+        //{
+        //    Debug.Log(info.collider.gameObject.name);
+        //}
         if (info.collider != null && info.collider.gameObject.tag == "Spite")
         {
             if (isOnSpite) return;
@@ -194,7 +249,7 @@ public class CatBase : MonoBehaviour
         while (thisEnemy.hp > 0)
         {
             thisEnemy.Hurt(attackValue);
-            Hurt(attackPrice);
+            //Hurt(attackPrice);
             yield return new WaitForSeconds(0.2f);
         }
         isAttackState = false;
@@ -236,9 +291,10 @@ public class CatBase : MonoBehaviour
         Find();
         // 拖拽时不播放动画
         //animator.speed = 0;
+
         if (inGrid)
         {
-            spriteRenderer.sortingOrder = 0;
+            spriteRenderer.sortingOrder = 2;
             spriteRenderer.color = new Color(1, 1, 1, 0.6f);
         }
     }
@@ -247,6 +303,7 @@ public class CatBase : MonoBehaviour
     {
         // 恢复动画
         //animator.speed = 1;
+        gameObject.AddComponent<BoxCollider2D>();
         spriteRenderer.sortingOrder = 3;
         OnInitForPlace();
     }

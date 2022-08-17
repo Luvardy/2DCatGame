@@ -10,6 +10,11 @@ public class KingMove : MonoBehaviour
     public float maxHp;
     private float attackValue;
 
+    private Vector2 myDirHor;
+    private Vector2 myDirVer;
+
+    private float leftTime = .1f;
+
     private float borderUp = -0.07f;
     private float borderDown = -2.46f;
 
@@ -17,8 +22,10 @@ public class KingMove : MonoBehaviour
 
     private bool isOnSpite = false;
     private bool isAttackState = false;
+    private bool isHurtState = false;
 
     protected SpriteRenderer spriteRenderer;
+    protected Animator animator;
     void Start()
     {
         maxHp = hp;
@@ -26,6 +33,7 @@ public class KingMove : MonoBehaviour
         attackValue = hp;
 
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+        animator = gameObject.GetComponent<Animator>();
 
         if(!instance)
         {
@@ -38,12 +46,17 @@ public class KingMove : MonoBehaviour
     {
         DetectSpite();
         DetectEnemy();
-        if(ShowCard.disapear)
+
+        if(ShowCard.disapear && !isHurtState)
         {
             CheckCanMove();
         }
-        else
+        else if(!ShowCard.disapear)
         {
+            animator.SetBool("walkLeft", false);
+            animator.SetBool("walkRight", false);
+            animator.SetBool("walkUp", false);
+            animator.SetBool("walkDown", false);
             transform.position = GridManager.instance.GetGridPointByKing() + new Vector2(0f, 0.5f);
         }
 
@@ -89,19 +102,36 @@ public class KingMove : MonoBehaviour
         Debug.DrawLine(start + new Vector2(0, 0.25f), start + new Vector2(-0.3f, 0.25f), Color.red);
 
 
+        {
+
+        }
         if (Input.GetKey(KeyCode.A))
         {
             if (checkLeftUp.collider == null && checkLeftDown.collider == null)
             {
-                transform.Translate(Vector2.left * moveSpeed * Time.deltaTime);
+                myDirHor = Vector2.left;
+                animator.SetBool("walkLeft", true);
+                transform.Translate(myDirHor * moveSpeed * Time.deltaTime);
             }
+        }
+        if(Input.GetKeyUp(KeyCode.A))
+        {
+            myDirHor = Vector2.zero;
+            animator.SetBool("walkLeft", false);
         }
         if (Input.GetKey(KeyCode.D))
         {
             if (checkRightUp.collider == null && checkRightDown.collider == null)
             {
-                transform.Translate(Vector2.right * moveSpeed * Time.deltaTime);
+                myDirHor = Vector2.right;
+                animator.SetBool("walkRight", true);
+                transform.Translate(myDirHor * moveSpeed * Time.deltaTime);
             }
+        }
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            myDirHor = Vector2.zero;
+            animator.SetBool("walkRight", false);
         }
         if (Input.GetKey(KeyCode.W))
         {
@@ -109,7 +139,14 @@ public class KingMove : MonoBehaviour
             {
                 return;
             }
-            transform.Translate(Vector2.up * moveSpeed * Time.deltaTime);
+            myDirVer = Vector2.up;
+            animator.SetBool("walkUp", true);
+            transform.Translate(myDirVer * moveSpeed * Time.deltaTime);
+        }
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            myDirVer = Vector2.zero;
+            animator.SetBool("walkUp", false);
         }
         if (Input.GetKey(KeyCode.S))
         {
@@ -117,11 +154,27 @@ public class KingMove : MonoBehaviour
             {
                 return;
             }
-            transform.Translate(Vector2.down * moveSpeed * Time.deltaTime);
+            myDirVer = Vector2.down;
+            animator.SetBool("walkDown", true);
+            transform.Translate(myDirVer * moveSpeed * Time.deltaTime);
         }
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            myDirVer = Vector2.zero;
+            animator.SetBool("walkDown", false);
+        }
+    }
 
-
-
+    IEnumerator GetHitPos(Vector2 dir)
+    {
+        while(leftTime > 0)
+        {
+            leftTime = leftTime - Time.deltaTime;
+            transform.Translate(-dir * 3f * Time.deltaTime);
+            yield return new WaitForSeconds(0.01f);
+        }
+        leftTime = .1f;
+        isHurtState = false;
     }
 
     private void DetectEnemy()
@@ -130,10 +183,10 @@ public class KingMove : MonoBehaviour
         RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(0.5f, 0f),~(1<<0));
         Debug.DrawLine(start, start + new Vector2(0.5f, 0f), Color.blue);
         if (isAttackState) return;
-        if (info.collider != null)
-        {
-            Debug.Log(info.collider.gameObject.name);
-        }
+        //if (info.collider != null)
+        //{
+        //    Debug.Log(info.collider.gameObject.name);
+        //}
         if (info.collider != null && info.collider.gameObject.tag == "Enemy")
         {
             Attack(info.collider.gameObject);
@@ -192,8 +245,10 @@ public class KingMove : MonoBehaviour
 
     public void Hurt(float hurtValue)
     {
+        isHurtState = true;
         hp -= hurtValue;
         UIManager.instance.HpChange(hp / maxHp);
+        StartCoroutine(GetHitPos(myDirVer + myDirHor));
         StartCoroutine(ColorEF(0.2f, new Color(0.5f, 0.5f, 0.5f), 0.05f, null));
         Debug.Log("i am hurt miao" + hp);
         if(hp < 0.01f)

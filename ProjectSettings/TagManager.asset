@@ -11,6 +11,10 @@ TagManager:
   - Spite
   - Switch
   - Boom
+  - Left
+  - Right
+  - Down
+  - Up
   layers:
   - Default
   - TransparentFX
@@ -24,8 +28,8 @@ TagManager:
   - Wall
   - Switch
   - Trap
-  - 
-  - 
+  - Way
+  - Cat
   - 
   - 
   - 

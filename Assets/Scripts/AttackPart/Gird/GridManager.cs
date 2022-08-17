@@ -124,8 +124,10 @@ public class GridManager : MonoBehaviour
 
     public bool CheckNearKing()
     {
-        float kinglPosX = GetGridPointByKing().x;
-        if (GetGridPointByMouse().x - kinglPosX <= 6.01f && GetGridPointByMouse().x - kinglPosX >= -0.01f)
+        float kingPosX = GetGridPointByKing().x;
+        float kingPosY = GetGridPointByKing().y;
+        if (GetGridPointByMouse().x - kingPosX <= 2.1f && GetGridPointByMouse().x - kingPosX >= -1.01f
+            &&GetGridPointByMouse().y -kingPosY <= 1.01f && GetGridPointByMouse().y - kingPosY >= -1.01f)
             return true;
         else return false;
     }

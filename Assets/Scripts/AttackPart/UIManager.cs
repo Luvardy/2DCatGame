@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
     private Text unitCatNum;
     private Image hpFill;
+    private Image buttonImg;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +20,7 @@ public class UIManager : MonoBehaviour
 
         unitCatNum = transform.Find("UnitCat/UnitCatNum").GetComponent<Text>();
         hpFill = transform.Find("HP").GetComponent<Image>();
+        buttonImg = transform.Find("Card/Button").GetComponent<Image>();
 
     }
 
@@ -35,6 +37,18 @@ public class UIManager : MonoBehaviour
 
             hpFill.fillAmount = valuePercent;
 
+        }
+    }
+
+    public void ChangeButtonColor()
+    {
+        if(buttonImg.color == Color.white)
+        {
+            buttonImg.color = Color.red;
+        }
+        else
+        {
+            buttonImg.color = Color.white;
         }
     }
 }

@@ -13,6 +13,7 @@ public class SamuraiCat : CatBase
         HP = 60f;
         AttackPrice = hp;//撞击敌人自损血量
         catCost = 6;
+        catSpeed = 2f;
         State = CatState.Move;
         PlayerManager.instance.CatNeedCost(catCost);
     }
