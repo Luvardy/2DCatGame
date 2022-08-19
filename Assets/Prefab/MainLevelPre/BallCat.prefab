@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5710788019682141343}
   - component: {fileID: 2725836553003485291}
   - component: {fileID: 114383867762619478}
+  - component: {fileID: 659431207909657373}
   m_Layer: 13
   m_Name: BallCat
   m_TagString: Cat
@@ -69,7 +70,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: af5a30444f5fad84c9d2517a653b88e9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2a6bd51db705b6b4fa29ef64f76e2d36, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -97,7 +98,26 @@ MonoBehaviour:
   catCost: 0
   hp: 20
   attackPrice: 0
-  attackValue: 0
+  attackValue: 20
   catSpeed: 0
   myDir: {x: 1, y: 0}
   currCat: {fileID: 0}
+--- !u!95 &659431207909657373
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669080569563698491}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f1e47db44436df9449ad4203b93020a1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

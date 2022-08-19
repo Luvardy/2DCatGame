@@ -15,6 +15,7 @@ TagManager:
   - Right
   - Down
   - Up
+  - CallPlace
   layers:
   - Default
   - TransparentFX

@@ -7,13 +7,15 @@ public class ArrowManager : MonoBehaviour
     public static bool isEditing = false;
     private bool isSelectMode = false;
     private bool clickToShowArrow = true;
-
+    private bool firstTime = true;
+    //gameconf need
     public GameObject ArrowLeft;
     public GameObject ArrowRight;
     public GameObject ArrowUp;
     public GameObject ArrowDown;
     public GameObject canEdit;
     public GameObject cantEdit;
+    public GameObject canPlace;
 
     private GameObject left;
     private GameObject right;
@@ -47,6 +49,8 @@ public class ArrowManager : MonoBehaviour
 
             RaycastHit2D checkArrow = Physics2D.Linecast(mousePos, mousePos + new Vector2(0.1f, 0f), 1 << 12);
 
+
+
             if (clickToShowArrow)
             {
                 if (GridManager.instance.CheckCanPlace())
@@ -74,18 +78,21 @@ public class ArrowManager : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0) && !isSelectMode && GridManager.instance.CheckCanPlace() && clickToShowArrow)
             {
-                isSelectMode = true;
 
-                pickPos = mousePos;
-
-                clickToShowArrow = false;
                 if (checkArrow.collider == null)
                 {
+                    isSelectMode = true;
+
+                    pickPos = mousePos;
+
+                    clickToShowArrow = false;
+
                     left = Instantiate(ArrowLeft, mousePos + new Vector2(-.5f, 0f), Quaternion.Euler(0f, 0f, 180f));
                     right = Instantiate(ArrowRight, mousePos + new Vector2(.5f, 0f), Quaternion.identity);
                     up = Instantiate(ArrowUp, mousePos + new Vector2(0f, .5f), Quaternion.Euler(0f, 0f, 90f));
                     down = Instantiate(ArrowDown, mousePos + new Vector2(0f, -.5f), Quaternion.Euler(0f, 0f, 270f));
                 }
+
 
             }
 
@@ -100,6 +107,7 @@ public class ArrowManager : MonoBehaviour
         }
         else
         {
+
             canEdit.gameObject.SetActive(false);
             cantEdit.gameObject.SetActive(false);
             if(!clickToShowArrow)
@@ -111,6 +119,34 @@ public class ArrowManager : MonoBehaviour
             }
         }
 
+        if(!ShowCard.disapear)
+        {
+            Debug.Log("FirstStep");
+            if(isEditing)
+            {
+                canPlace.gameObject.SetActive(false);
+                Debug.Log("SecondStep");
+                GridManager.instance.DestoryNearKing();
+                firstTime = true;
+            }
+            else
+            {
+                if(firstTime)
+                {
+                    canPlace.gameObject.SetActive(true);
+                    Debug.Log("ShowCanPlace");
+                    GridManager.instance.ShowNearKing(canPlace);
+                    firstTime = false;
+                }
+            }
+        }
+        else
+        { 
+            canPlace.gameObject.SetActive(false);
+            Debug.Log("SecondStep");
+            GridManager.instance.DestoryNearKing();
+            firstTime = true;
+        }
 
         if (isSelectMode)
         {

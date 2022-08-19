@@ -16,14 +16,27 @@ public class BallCat : CatBase
     protected override void OnInitForPlace()
     {
         Debug.Log("?");
-        HP = 100f;
+        HP = 40f;
         AttackPrice = hp;
-        attackValue = 0f;
+        attackValue = 20f;
         catCost = 1;
         catSpeed = 3f;
         State = CatState.Move;
         PlayerManager.instance.CatNeedCost(catCost);
 
+    }
+
+    protected override IEnumerator DoHurt(Enemy thisEnemy)
+    {
+
+        while (thisEnemy.hp > 0)
+        {
+            thisEnemy.Hurt(attackValue);
+            Hurt(attackPrice);
+            yield return new WaitForSeconds(0.2f);
+        }
+        isAttackState = false;
+        State = CatState.Move;
     }
 
 

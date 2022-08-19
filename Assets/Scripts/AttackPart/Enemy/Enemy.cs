@@ -9,6 +9,11 @@ public class Enemy : MonoBehaviour
     public float attackValue = 20f;
     private bool isAttackState = false;
     private bool stopDetect = false;
+    private bool isThisCat = false;
+
+
+
+    GameObject curCat;
 
     private bool isStarted = false;
     SpriteRenderer spriteRenderer;
@@ -56,8 +61,9 @@ public class Enemy : MonoBehaviour
     private void Dead()
     {
    
-        animator.Play("EnemyDie");
         stopDetect = true;
+        animator.SetBool("Die",true);
+        animator.SetBool("Attack", false);
         gameObject.layer = 1 << 2;
 
     }
@@ -65,14 +71,21 @@ public class Enemy : MonoBehaviour
     public void detectCat()
     {
         Vector2 start = gameObject.transform.position;
-        RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(-1f, 0f), LayerMask.GetMask("Cat"));
-        Debug.DrawLine(start, start + new Vector2(-1f, 0f), Color.red);
+        RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(-.3f, 0f), LayerMask.GetMask("Cat"));
+
+        Debug.DrawLine(start, start + new Vector2(-.3f, 0f), Color.red); 
         if(isAttackState)
         {
+            if(info.collider == null || info.collider.gameObject != curCat)
+            {
+                isThisCat = false;
+            }
             return;
         }
         if (info.collider != null)
         {
+            isThisCat = true;
+            curCat = info.collider.gameObject;
             Debug.Log("RobotAttacking" + info.collider.gameObject.name);
             Attack(info.collider.gameObject);
         }
@@ -86,13 +99,13 @@ public class Enemy : MonoBehaviour
     }
     IEnumerator DoHurt(CatBase thisCat)
     {
-        while(thisCat.hp > 0)
+        while(thisCat.hp > 0 && !stopDetect && isThisCat)
         {
-            animator.Play("EnemyAttack");
+            animator.SetBool("Attack", true);
             thisCat.Hurt(attackValue);
-            yield return new WaitForSeconds(0.7f);
+            yield return new WaitForSeconds(1.5f);
         }
-        animator.Play("EnemyIdel");
+        animator.SetBool("Attack", false);
         isAttackState = false;
     }
 

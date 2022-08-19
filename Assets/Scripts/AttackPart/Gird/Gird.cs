@@ -11,12 +11,12 @@ public class Grid
     // 世界坐标
     public Vector2 Position;
 
-    public bool HaveEnemy;
+    public GameObject CanPlace;
     // 构造函数
-    public Grid(Vector2 point, Vector2 position, bool haveEnemy)
+    public Grid(Vector2 point, Vector2 position, GameObject canPlace)
     {
         Point = point;
         Position = position;
-        HaveEnemy = haveEnemy;
+        CanPlace = canPlace;
     }
 }

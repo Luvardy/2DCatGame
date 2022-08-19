@@ -13,6 +13,8 @@ public class CameraFollow : MonoBehaviour
     public float changSpeed = 0.1f;
     public float moveSpeed = 0f;
 
+    private bool changeDone = false;
+
     public GameObject target;
     // Start is called before the first frame update
        void Start()
@@ -31,19 +33,22 @@ public class CameraFollow : MonoBehaviour
             if (myCamera.orthographicSize > 3.5f)
             {
                 myCamera.orthographicSize -= Time.deltaTime/changSpeed;
-                moveSpeed += Time.deltaTime/0.1f;
+                moveSpeed += Time.deltaTime/0.5f;
+                transform.position = new Vector3((target.transform.position + offset).x - moveSpeed, (target.transform.position + offset).y, transform.position.z);
             }
-            transform.position = new Vector3((target.transform.position + offset).x - moveSpeed, (target.transform.position + offset).y, transform.position.z);
+            
         }
         else
         {
-            if (myCamera.orthographicSize <5)
+            if (myCamera.orthographicSize <7)
             {
                 myCamera.orthographicSize += Time.deltaTime / changSpeed;
-                moveSpeed -= Time.deltaTime / 0.1f;
+                moveSpeed -= Time.deltaTime / 0.5f;
+                transform.position = new Vector3((target.transform.position + offset).x - moveSpeed, (target.transform.position + offset).y, camPos.z);
             }
-            transform.position = new Vector3((target.transform.position + offset).x - moveSpeed,camPos.y, camPos.z);
+            
         }
+
 
     }
 }

@@ -5,6 +5,8 @@ using UnityEngine.Events;
 
 public class KingMove : MonoBehaviour
 {
+    public static bool canCallCat = false;
+
     public float moveSpeed = 0.5f;
     public float hp = 200f;
     public float maxHp;
@@ -49,6 +51,7 @@ public class KingMove : MonoBehaviour
 
         if(ShowCard.disapear && !isHurtState)
         {
+            animator.SetBool("Attacking", false);
             CheckCanMove();
         }
         else if(!ShowCard.disapear)
@@ -57,6 +60,7 @@ public class KingMove : MonoBehaviour
             animator.SetBool("walkRight", false);
             animator.SetBool("walkUp", false);
             animator.SetBool("walkDown", false);
+            animator.SetBool("Attacking", true);
             transform.position = GridManager.instance.GetGridPointByKing() + new Vector2(0f, 0.5f);
         }
 
@@ -81,11 +85,11 @@ public class KingMove : MonoBehaviour
         RaycastHit2D checkDownRight = Physics2D.Linecast(start + new Vector2(0.15f, 0f), start + new Vector2(0.15f, -0.5f), LayerMask.GetMask("Wall"));
         RaycastHit2D checkDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.5f), LayerMask.GetMask("Wall"));
 
-        RaycastHit2D checkRightDown = Physics2D.Linecast(start + new Vector2(0f,-0.25f), start + new Vector2(0.5f,-0.25f), LayerMask.GetMask("Wall"));
-        RaycastHit2D checkRightUp = Physics2D.Linecast(start + new Vector2(0f,0.25f), start + new Vector2(0.5f,0.25f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkRightDown = Physics2D.Linecast(start + new Vector2(0f,-0.22f), start + new Vector2(0.5f,-0.22f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkRightUp = Physics2D.Linecast(start + new Vector2(0f,0.22f), start + new Vector2(0.5f,0.22f), LayerMask.GetMask("Wall"));
 
-        RaycastHit2D checkLeftDown = Physics2D.Linecast(start + new Vector2(0,-0.25f), start + new Vector2(-0.3f, -0.25f), LayerMask.GetMask("Wall"));
-        RaycastHit2D checkLeftUp = Physics2D.Linecast(start + new Vector2(0, 0.25f), start + new Vector2(-0.3f, 0.25f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkLeftDown = Physics2D.Linecast(start + new Vector2(0,-0.22f), start + new Vector2(-0.3f, -0.22f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkLeftUp = Physics2D.Linecast(start + new Vector2(0, 0.22f), start + new Vector2(-0.3f, 0.22f), LayerMask.GetMask("Wall"));
 
         Debug.DrawLine(start + new Vector2(-0.15f, 0f), start + new Vector2(-0.15f, 0.3f), Color.red);
         Debug.DrawLine(start + new Vector2(0.15f, 0f), start + new Vector2(0.15f, 0.3f), Color.red);
@@ -95,11 +99,11 @@ public class KingMove : MonoBehaviour
         Debug.DrawLine(start + new Vector2(0.15f, 0f), start + new Vector2(0.15f, -0.5f), Color.red);
         Debug.DrawLine(start, start + new Vector2(0f, -0.5f), Color.red);
 
-        Debug.DrawLine(start + new Vector2(0f, -0.25f), start + new Vector2(0.5f, -0.25f), Color.red);
-        Debug.DrawLine(start + new Vector2(0f, 0.25f), start + new Vector2(0.5f, 0.25f), Color.red);
+        Debug.DrawLine(start + new Vector2(0f, -0.22f), start + new Vector2(0.5f, -0.22f), Color.red);
+        Debug.DrawLine(start + new Vector2(0f, 0.22f), start + new Vector2(0.5f, 0.22f), Color.red);
 
-        Debug.DrawLine(start + new Vector2(0, -0.25f), start + new Vector2(-0.3f, -0.25f), Color.red);
-        Debug.DrawLine(start + new Vector2(0, 0.25f), start + new Vector2(-0.3f, 0.25f), Color.red);
+        Debug.DrawLine(start + new Vector2(0, -0.22f), start + new Vector2(-0.3f, -0.22f), Color.red);
+        Debug.DrawLine(start + new Vector2(0, 0.22f), start + new Vector2(-0.3f, 0.22f), Color.red);
 
 
         {
@@ -236,8 +240,13 @@ public class KingMove : MonoBehaviour
             Hurt(150);
             Destroy(info.collider.gameObject);
         }
+        else if(info.collider != null && info.collider.gameObject.tag == "CallPlace")
+        {
+            canCallCat = true;
+        }
         else
         {
+            canCallCat = false;
             StopCoroutine("StepOnSpite");
             isOnSpite = false;
         }

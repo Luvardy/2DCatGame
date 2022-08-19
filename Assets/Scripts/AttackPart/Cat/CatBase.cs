@@ -112,10 +112,10 @@ public class CatBase : MonoBehaviour
         RaycastHit2D infoWayUp = Physics2D.Linecast(start + new Vector2(0f,-.3f), start + new Vector2(0f, -.4f),1<<12);
         RaycastHit2D infoWayDown = Physics2D.Linecast(start + new Vector2(0f,.3f), start + new Vector2(0f, .4f),1<<12);
 
-        RaycastHit2D infoWallRight = Physics2D.Linecast(start, start + new Vector2(0.4f, 0f),1<<9 |1 << 8);
-        RaycastHit2D infoWallLeft = Physics2D.Linecast(start, start + new Vector2(-0.4f, 0f),1<<9 |1 << 8);
-        RaycastHit2D infoWallUp = Physics2D.Linecast(start, start + new Vector2(0f, 0.4f),1<<9 | 1 << 8);
-        RaycastHit2D infoWallDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.4f),1<<9 | 1 << 8);
+        RaycastHit2D infoWallRight = Physics2D.Linecast(start, start + new Vector2(0.3f, 0f),1<<9 |1 << 8);
+        RaycastHit2D infoWallLeft = Physics2D.Linecast(start, start + new Vector2(-0.3f, 0f),1<<9 |1 << 8);
+        RaycastHit2D infoWallUp = Physics2D.Linecast(start, start + new Vector2(0f, 0.3f),1<<9 | 1 << 8);
+        RaycastHit2D infoWallDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.3f),1<<9 | 1 << 8);
 
         Debug.DrawLine(start + new Vector2(.45f, 0f), start + new Vector2(.5f, 0f), Color.red);
         Debug.DrawLine(start + new Vector2(-.45f, 0f), start + new Vector2(-.5f, 0f), Color.red);
@@ -184,10 +184,39 @@ public class CatBase : MonoBehaviour
     private void DetectEnemy()
     {
         Vector2 start = transform.position;
-        RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(0.5f, 0f), ~(1 << 0));
-        
+        RaycastHit2D info;
+        RaycastHit2D infoLeft = Physics2D.Linecast(start, start + new Vector2(-0.4f, 0f), ~(1 << 13 | 1 << 12));
+        RaycastHit2D infoRight = Physics2D.Linecast(start, start + new Vector2(0.4f, 0f), ~(1 << 13 | 1 << 12));
+        RaycastHit2D infoDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.4f), ~(1 << 13 | 1 << 12));
+        RaycastHit2D infoUp = Physics2D.Linecast(start, start + new Vector2(0f, 0.4f), ~(1 << 13 | 1 << 12));
+        Debug.DrawLine(start, start + new Vector2(-0.5f, 0f), Color.yellow);
+        Debug.DrawLine(start, start + new Vector2(0.5f, 0f), Color.yellow);
+        Debug.DrawLine(start, start + new Vector2(0f, 0.5f), Color.yellow);
+        Debug.DrawLine(start, start + new Vector2(0f,-0.50f), Color.yellow);
+
+        if (myDir == Vector2.left)
+        {
+            info = infoLeft;
+        }
+        else if (myDir == Vector2.right)
+        {
+            info = infoRight;
+        }
+        else if (myDir == Vector2.up)
+        {
+            info = infoUp;
+        }
+        else
+        {
+            info = infoDown;
+        }
+
         if (isAttackState) return;
 
+        if(info.collider != null)
+        {
+            Debug.Log(info.collider.gameObject.name);
+        }
         if (info.collider != null && info.collider.gameObject.tag == "Enemy")
         {
             currCat = info.collider.gameObject;
@@ -243,7 +272,7 @@ public class CatBase : MonoBehaviour
         StartCoroutine(DoHurt(thisEnemy));
     }
 
-    IEnumerator DoHurt(Enemy thisEnemy)
+    protected virtual IEnumerator DoHurt(Enemy thisEnemy)
     {
 
         while (thisEnemy.hp > 0)
@@ -261,7 +290,7 @@ public class CatBase : MonoBehaviour
         isOnSpite = true;
         while (hp > 0)
         {
-            Hurt(10);
+            Hurt(20);
             yield return new WaitForSeconds(0.5f);
         }
     }

@@ -11,6 +11,10 @@ public class GridManager : MonoBehaviour
 
     public static GridManager instance;
 
+    public GameObject initPos1;
+    public GameObject initPos2;
+
+
     public GameObject PlaceRange;
 
     // Start is called before the first frame update
@@ -20,9 +24,11 @@ public class GridManager : MonoBehaviour
         {
             instance = this;
         }
-        CreateGridsBaseGrid();
-        CreateGridsBasePointList();
-        CreateGridBaseColl();
+        CreateGridsBaseGrid(initPos1,20,6);
+        CreateGridBaseColl(initPos1,20,6);
+        CreateGridsBaseGrid(initPos2, 40, 6);
+        CreateGridBaseColl(initPos2, 40, 6);
+
     }
 
     private void Update()
@@ -36,7 +42,7 @@ public class GridManager : MonoBehaviour
     }
 
 
-    private void CreateGridBaseColl()
+    private void CreateGridBaseColl(GameObject initPos, int lineHor, int lineVer)
     { 
             // 由于这个预制体比较简单，所以直接用代码来定义，创建一个预制体网格
             GameObject prefabGrid = new GameObject();
@@ -46,30 +52,30 @@ public class GridManager : MonoBehaviour
             // 父物体是网格管理器
             prefabGrid.transform.SetParent(transform);
             // 位置就是网格管理器的位置
-            prefabGrid.transform.position = this.transform.position;
+            prefabGrid.transform.position = transform.position;
             prefabGrid.tag = "Grid";
-            prefabGrid.name = 0 + "0" + 0;
-            for (int i = 0; i < 20; ++i)
+            prefabGrid.name = 0 + "0" + 0 ;
+            for (int i = 0; i < lineHor; ++i)
             {
-                for (int j = 0; j < 6; ++j)
+                for (int j = 0; j < lineVer; ++j)
                 {
-                        GameObject grid = GameObject.Instantiate(prefabGrid, transform.position + new Vector3(1f * i, 1f * j, 0), Quaternion.identity);
-                        grid.name = i + "-" + j;         
+                        GameObject grid = GameObject.Instantiate(prefabGrid, initPos.gameObject.transform.position + new Vector3(1f * i, 1f * j, 0), Quaternion.identity);
+                        grid.name = i + "-" + j + initPos.gameObject.name;         
 
                 }
             }
         }
 
 
-    private void CreateGridsBaseGrid()
+    private void CreateGridsBaseGrid(GameObject initPos, int lineHor, int lineVer)
     {
-        for (int i = 0; i < 20; ++i)
+        for (int i = 0; i < lineHor; ++i)
         {
-            for (int j = 0; j < 6; ++j)
+            for (int j = 0; j < lineVer; ++j)
             {
                 // 由于该脚本依附的游戏对象是在根目录，所以transform.position是世界坐标
                 GridList.Add(new Grid(new Vector2(i, j),
-                    transform.position + new Vector3(1f * i, 1f * j, 0), false));
+                    initPos.gameObject.transform.position + new Vector3(1f * i, 1f * j, 0), null));
             }
         }
     }
@@ -109,7 +115,7 @@ public class GridManager : MonoBehaviour
     public Vector2 GetGridPointByKing()
     {
         float dis = 999999;
-        Vector2 point = pointList[0];
+        Vector2 point = GridList[0].Position;
         for (int i = 0; i < GridList.Count; ++i)
         {
             float kingToGrid = Vector2.Distance(KingMove.instance.GetKingPos(), GridList[i].Position);
@@ -126,10 +132,40 @@ public class GridManager : MonoBehaviour
     {
         float kingPosX = GetGridPointByKing().x;
         float kingPosY = GetGridPointByKing().y;
-        if (GetGridPointByMouse().x - kingPosX <= 2.1f && GetGridPointByMouse().x - kingPosX >= -1.01f
+        if (GetGridPointByMouse().x - kingPosX <= 1.01f && GetGridPointByMouse().x - kingPosX >= -1.01f
             &&GetGridPointByMouse().y -kingPosY <= 1.01f && GetGridPointByMouse().y - kingPosY >= -1.01f)
+        {
+
             return true;
+        }
+            
         else return false;
+    }
+
+    public void ShowNearKing(GameObject canEdit)
+    {
+        float kingPosX = GetGridPointByKing().x;
+        float kingPosY = GetGridPointByKing().y;
+
+        for (int i = 0; i <GridList.Count; i++)
+        {
+            if (GridList[i].Position.x - kingPosX <= 1.01f && GridList[i].Position.x - kingPosX >= -1.01f
+                && GridList[i].Position.y - kingPosY <= 1.01f && GridList[i].Position.y - kingPosY >= -1.01f)
+            {
+                GridList[i].CanPlace = Instantiate(canEdit, GridList[i].Position, Quaternion.identity);
+            }
+        }
+    }
+
+    public void DestoryNearKing()
+    {
+        for(int i = 0; i< GridList.Count;i++)
+        {
+            if(GridList[i].CanPlace != null)
+            {
+                Destroy(GridList[i].CanPlace);
+            }
+        }
     }
 
     public bool CheckCanPlace()

@@ -8,16 +8,22 @@ public class ShowCard : MonoBehaviour
 
     void Update()
     {
+
+        Debug.Log(KingMove.canCallCat);
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            if(disapear == true)
+            if(KingMove.canCallCat)
             {
-                disapear = false;
+                if(disapear == true)
+                {
+                    disapear = false;
+                }
+                else
+                {
+                    disapear = true;
+                }
             }
-            else
-            {
-                disapear = true;
-            }
+
         }
 
         if (!disapear)
@@ -35,11 +41,8 @@ public class ShowCard : MonoBehaviour
                 transform.Translate(Vector2.up * 400 * Time.deltaTime);
             }
         }
-
-
-
-
-
     }
+
+
 
 }

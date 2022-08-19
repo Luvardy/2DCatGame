@@ -6,7 +6,7 @@ public class robot1 : Enemy
 {
     void Start()
     {
-        HP = 100;
+        HP = 20;
     }
 
 
