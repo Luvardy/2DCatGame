@@ -9,6 +9,10 @@ public class UIManager : MonoBehaviour
     private Text unitCatNum;
     private Image hpFill;
     private Image buttonImg;
+
+    public Sprite inEdit;
+    public Sprite OutEdit;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,13 +46,13 @@ public class UIManager : MonoBehaviour
 
     public void ChangeButtonColor()
     {
-        if(buttonImg.color == Color.white)
+        if(buttonImg.sprite == inEdit)
         {
-            buttonImg.color = Color.red;
+            buttonImg.sprite = OutEdit;
         }
         else
         {
-            buttonImg.color = Color.white;
+            buttonImg.sprite = inEdit;
         }
     }
 }

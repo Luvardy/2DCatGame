@@ -13,7 +13,10 @@ public class CameraFollow : MonoBehaviour
     public float changSpeed = 0.1f;
     public float moveSpeed = 0f;
 
-    private bool changeDone = false;
+    private float viewSpeed = 10f;
+
+
+    private bool changeDone = true;
 
     public GameObject target;
     // Start is called before the first frame update
@@ -32,23 +35,64 @@ public class CameraFollow : MonoBehaviour
         {
             if (myCamera.orthographicSize > 3.5f)
             {
+                changeDone = false;
                 myCamera.orthographicSize -= Time.deltaTime/changSpeed;
-                moveSpeed += Time.deltaTime/0.5f;
+                moveSpeed += Time.deltaTime/.1f;
                 transform.position = new Vector3((target.transform.position + offset).x - moveSpeed, (target.transform.position + offset).y, transform.position.z);
             }
-            
+            else
+            {
+                changeDone = true;
+            }
+            if(changeDone)
+            {
+                transform.position = new Vector3((target.transform.position + offset).x - moveSpeed, (target.transform.position + offset).y, transform.position.z);
+            }
         }
         else
         {
-            if (myCamera.orthographicSize <7)
+            if (myCamera.orthographicSize <5)
             {
+                changeDone = false;
                 myCamera.orthographicSize += Time.deltaTime / changSpeed;
-                moveSpeed -= Time.deltaTime / 0.5f;
+                moveSpeed -= Time.deltaTime / .1f;
                 transform.position = new Vector3((target.transform.position + offset).x - moveSpeed, (target.transform.position + offset).y, camPos.z);
             }
-            
+            else
+            {
+                changeDone = true;
+            }
+            if (changeDone)
+            {
+                CameraView();
+            }
         }
 
 
+    }
+
+    private void CameraView()
+    {
+        if(Input.mousePosition.x > Screen.width)
+        {
+            if(transform.position.x < target.transform.position.x + 30f)
+                transform.Translate(viewSpeed * Time.deltaTime , 0f, 0f);
+        }
+        if(Input.mousePosition.x < 0)
+        {
+            if(transform.position.x > target.transform.position.x - 20f)
+                transform.Translate(-viewSpeed * Time.deltaTime, 0f, 0f);
+        }
+
+        if (Input.mousePosition.y > Screen.height)
+        {
+            if (transform.position.y < target.transform.position.y + 3f)
+                transform.Translate(0f, viewSpeed * Time.deltaTime, 0f);
+        }
+        if (Input.mousePosition.y < 0)
+        {
+            if (transform.position.y > target.transform.position.y - 1f)
+                transform.Translate(0f, -viewSpeed * Time.deltaTime, 0f);
+        }
     }
 }
