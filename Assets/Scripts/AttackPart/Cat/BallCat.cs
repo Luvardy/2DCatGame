@@ -4,11 +4,7 @@ using UnityEngine;
 
 public class BallCat : CatBase
 {
-
-
-
-
-
+    public AudioClip attack;
     private void Update()
     {
         FSM();
@@ -31,6 +27,7 @@ public class BallCat : CatBase
 
         while (thisEnemy.hp > 0)
         {
+            SoundManager.instance.PlaySingelBall(attack);
             thisEnemy.Hurt(attackValue);
             Hurt(attackPrice);
             yield return new WaitForSeconds(0.2f);

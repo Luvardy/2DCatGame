@@ -38,23 +38,6 @@ public class CatBase : MonoBehaviour
         set
         {
             state = value;
-            switch(state)
-            {
-                case CatState.Idel:
-                    Debug.Log("??");
-                    //animator.Play();
-                    //animator.speed = 0;
-                    break;
-                case CatState.Move:
-                    //animator.Play();
-                    break;
-                case CatState.Attack:
-                    //animator.Play();
-                    break;
-                case CatState.Dead:
-                    //animator.Play();
-                    break;
-            }
         }
     }
 
@@ -117,10 +100,10 @@ public class CatBase : MonoBehaviour
         RaycastHit2D infoWallUp = Physics2D.Linecast(start, start + new Vector2(0f, 0.3f),1<<9 | 1 << 8);
         RaycastHit2D infoWallDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.3f),1<<9 | 1 << 8);
 
-        Debug.DrawLine(start + new Vector2(.45f, 0f), start + new Vector2(.5f, 0f), Color.red);
-        Debug.DrawLine(start + new Vector2(-.45f, 0f), start + new Vector2(-.5f, 0f), Color.red);
-        Debug.DrawLine(start + new Vector2(0f, .45f), start + new Vector2(0f, .5f), Color.red);
-        Debug.DrawLine(start + new Vector2(0f, -.45f), start + new Vector2(0f, -.5f), Color.red);
+        //Debug.DrawLine(start + new Vector2(.45f, 0f), start + new Vector2(.5f, 0f), Color.red);
+        //Debug.DrawLine(start + new Vector2(-.45f, 0f), start + new Vector2(-.5f, 0f), Color.red);
+        //Debug.DrawLine(start + new Vector2(0f, .45f), start + new Vector2(0f, .5f), Color.red);
+        //Debug.DrawLine(start + new Vector2(0f, -.45f), start + new Vector2(0f, -.5f), Color.red);
 
         Debug.DrawLine(start, start + new Vector2(0.4f, 0f), Color.blue);
         Debug.DrawLine(start, start + new Vector2(-0.4f, 0f), Color.blue);
@@ -189,10 +172,10 @@ public class CatBase : MonoBehaviour
         RaycastHit2D infoRight = Physics2D.Linecast(start, start + new Vector2(0.4f, 0f), ~(1 << 13 | 1 << 12));
         RaycastHit2D infoDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.4f), ~(1 << 13 | 1 << 12));
         RaycastHit2D infoUp = Physics2D.Linecast(start, start + new Vector2(0f, 0.4f), ~(1 << 13 | 1 << 12));
-        Debug.DrawLine(start, start + new Vector2(-0.5f, 0f), Color.yellow);
-        Debug.DrawLine(start, start + new Vector2(0.5f, 0f), Color.yellow);
-        Debug.DrawLine(start, start + new Vector2(0f, 0.5f), Color.yellow);
-        Debug.DrawLine(start, start + new Vector2(0f,-0.50f), Color.yellow);
+        //Debug.DrawLine(start, start + new Vector2(-0.5f, 0f), Color.yellow);
+        //Debug.DrawLine(start, start + new Vector2(0.5f, 0f), Color.yellow);
+        //Debug.DrawLine(start, start + new Vector2(0f, 0.5f), Color.yellow);
+        //Debug.DrawLine(start, start + new Vector2(0f,-0.50f), Color.yellow);
 
         if (myDir == Vector2.left)
         {
@@ -243,7 +226,7 @@ public class CatBase : MonoBehaviour
     {
         Vector2 start = transform.position;
         RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(0f, -0.5f));
-        Debug.DrawLine(start, start + new Vector2(0f, -0.5f), Color.red);
+        //Debug.DrawLine(start, start + new Vector2(0f, -0.5f), Color.red);
         //if (info.collider != null)
         //{
         //    Debug.Log(info.collider.gameObject.name);
@@ -304,12 +287,13 @@ public class CatBase : MonoBehaviour
 
     private void Dead()
     {
+        Debug.Log("????");
         Destroy(gameObject);
     }
     // 查找自身相关组件
     protected void Find()
     {
-        //animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 

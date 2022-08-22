@@ -15,6 +15,9 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     private CatBase catInGrid;
 
     public CatType carCatType;
+
+    public AudioClip cardClicked;
+    public AudioClip cardPlaced;
     public bool WantPlace
     {
         get => wantPlace;
@@ -63,6 +66,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
             if (!dragging)
             {
                 Debug.Log("按住鼠标左键");
+                SoundManager.instance.PlaySingelCard(cardClicked);
                 dragging = true;
                 selectMode = false;
                 //开始拖拽状态的预览
@@ -78,6 +82,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
     {
         if(catInGrid != null)
         {
+            SoundManager.instance.PlaySingelCard(cardPlaced);
             cat.transform.position = GridManager.instance.GetGridByMouse().Position;
             cat.InitForPlace();
             cat = null;
@@ -105,6 +110,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
             if (!dragging)
             {
                 Debug.Log("选取");
+                SoundManager.instance.PlaySingelCard(cardClicked);
                 dragging = true;
                 selectMode = false;
                 clicked = true;
@@ -150,6 +156,7 @@ public class cardDrag : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, 
 
             if (catInGrid != null && Input.GetMouseButtonDown(0))
             {
+                SoundManager.instance.PlaySingelCard(cardPlaced);
                 cat.transform.position = grid.Position;
                 cat.InitForPlace();
                 cat = null;

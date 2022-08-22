@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class LongCat : CatBase
 {
+    private bool isJumping = false;
+
+    private Vector2 myLastDir = Vector2.right;
     private void Update()
     {
+
         FSM();
     }
     protected override void OnInitForPlace()
@@ -22,51 +26,137 @@ public class LongCat : CatBase
     protected override void MoveCat()
     {
         Vector2 start = (Vector2)transform.position;
-        RaycastHit2D infoFront = Physics2D.Linecast(start, start + new Vector2(0.2f, 0f), ~(1 << 0));
-        Debug.DrawLine(start, start + new Vector2(0.1f, 0f), Color.red);
+        RaycastHit2D infoWay;
+        RaycastHit2D infoWayLeft = Physics2D.Linecast(start + new Vector2(.3f,0f), start + new Vector2(.4f, 0f),1<<12);
+        RaycastHit2D infoWayRight = Physics2D.Linecast(start + new Vector2(-.3f,0f), start + new Vector2(-.4f, 0f),1<<12);
+        RaycastHit2D infoWayUp = Physics2D.Linecast(start + new Vector2(0f,-.3f), start + new Vector2(0f, -.4f),1<<12);
+        RaycastHit2D infoWayDown = Physics2D.Linecast(start + new Vector2(0f,.3f), start + new Vector2(0f, .4f),1<<12);
 
-        if (infoFront.collider != null)
+        RaycastHit2D infoNextRight = Physics2D.Linecast(start + new Vector2(1.5f, 0f), start + new Vector2(1.6f, 0f), 1 << 9 | 1 << 8);
+        RaycastHit2D infoNextLeft = Physics2D.Linecast(start + new Vector2(-1.5f, 0f), start + new Vector2(-1.6f, 0f), 1 << 9 | 1 << 8);
+        RaycastHit2D infoNextUp = Physics2D.Linecast(start + new Vector2(0f, 1.5f), start + new Vector2(0f, 1.6f), 1 << 9 | 1 << 8);
+        RaycastHit2D infoNextDown = Physics2D.Linecast(start + new Vector2(0f, 1.6f), start + new Vector2(0f, -1.6f), 1 << 9 | 1 << 8);
+
+        RaycastHit2D infoWallRight = Physics2D.Linecast(start, start + new Vector2(0.3f, 0f),1<<9 |1 << 8);
+        RaycastHit2D infoWallLeft = Physics2D.Linecast(start, start + new Vector2(-0.3f, 0f),1<<9 |1 << 8);
+        RaycastHit2D infoWallUp = Physics2D.Linecast(start, start + new Vector2(0f, 0.3f),1<<9 | 1 << 8);
+        RaycastHit2D infoWallDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.3f),1<<9 | 1 << 8);
+
+        //Debug.DrawLine(start + new Vector2(.45f, 0f), start + new Vector2(.5f, 0f), Color.red);
+        //Debug.DrawLine(start + new Vector2(-.45f, 0f), start + new Vector2(-.5f, 0f), Color.red);
+        //Debug.DrawLine(start + new Vector2(0f, .45f), start + new Vector2(0f, .5f), Color.red);
+        //Debug.DrawLine(start + new Vector2(0f, -.45f), start + new Vector2(0f, -.5f), Color.red);
+
+        Debug.DrawLine(start, start + new Vector2(.3f, 0f), Color.blue);
+        Debug.DrawLine(start, start + new Vector2(-0.4f, 0f), Color.blue);
+        Debug.DrawLine(start, start + new Vector2(0f, 0.4f), Color.blue);
+        Debug.DrawLine(start, start + new Vector2(0f, -0.4f), Color.blue);
+
+        Debug.DrawLine(start + new Vector2(2f, 0f), start + new Vector2(2.1f, 0f), Color.red);
+        if (myDir == Vector2.left)
         {
-            switch (infoFront.collider.gameObject.tag)
+            infoWay = infoWayLeft;
+        }
+        else if(myDir == Vector2.right)
+        {
+            infoWay = infoWayRight;
+        }
+        else if(myDir == Vector2.up)
+        {
+            infoWay = infoWayUp;
+        }
+        else
+        {
+            infoWay = infoWayDown;
+        }
+
+        if (infoWay.collider != null)
+        {
+            switch (infoWay.collider.gameObject.tag)
             {
                 case "Left":
                     myDir = Vector2.left;
+                    myLastDir = myDir;
                     break;
                 case "Right":
                     myDir = Vector2.right;
+                    myLastDir = myDir;
                     break;
                 case "Up":
                     myDir = Vector2.up;
+                    myLastDir = myDir;
                     break;
                 case "Down":
                     myDir = Vector2.down;
+                    myLastDir = myDir;
                     break;
-                default:
-                    checkCanJump();
-                    break;
+            }
+            if (infoWallRight.collider != null && infoNextRight.collider != null || infoWallLeft.collider != null && infoNextLeft.collider != null
+                || infoWallUp.collider != null && infoNextUp.collider != null || infoWallDown.collider != null && infoNextDown.collider != null)
+            {
+                myDir = Vector2.zero;
+            }
+            else if (infoWallRight.collider != null && infoNextRight.collider == null || infoWallLeft.collider != null && infoNextLeft.collider == null
+                    || infoWallUp.collider != null && infoNextUp.collider == null || infoWallDown.collider != null && infoNextDown.collider == null)
+            {
+                Jump();
             }
             transform.Translate(myDir * catSpeed * Time.deltaTime);
         }
+        else if(infoWallRight.collider != null && infoNextRight.collider != null || infoWallLeft.collider != null && infoNextLeft.collider != null
+                ||infoWallUp.collider != null && infoNextUp.collider != null || infoWallDown.collider != null && infoNextDown.collider != null)
+        {
+                myDir = Vector2.zero;
+        }
+        else if(infoWallRight.collider != null && infoNextRight.collider == null || infoWallLeft.collider != null && infoNextLeft.collider == null
+                || infoWallUp.collider != null && infoNextUp.collider == null || infoWallDown.collider != null && infoNextDown.collider == null)
+        {
+            Jump();
+        }
         else
         {
-            transform.Translate(myDir * catSpeed * Time.deltaTime);
+            transform.Translate(myLastDir * catSpeed * Time.deltaTime);
         }
+
+        if(myDir == Vector2.right)
+        {
+            animator.SetBool("WalkRight", true);
+        }
+        else
+        {
+            animator.SetBool("WalkRight", false);
+        }
+        if (myDir == Vector2.left)
+        {
+            animator.SetBool("WalkLeft", true);
+        }
+        else
+        {
+            animator.SetBool("WalkLeft", false);
+        }
+        if (myDir == Vector2.up)
+        {
+            animator.SetBool("WalkUp", true);
+        }
+        else
+        {
+            animator.SetBool("WalkUp", false);
+        }
+        if (myDir == Vector2.down)
+        {
+            animator.SetBool("WalkDown", true);
+        }
+        else
+        {
+            animator.SetBool("WalkDown", false);
+        }
+
     }
 
-    private void checkCanJump()
+    void Jump()
     {
-        Vector2 start = transform.position;
-        RaycastHit2D infoNext = Physics2D.Linecast(start + new Vector2(1.5f,0f), start + new Vector2(1.6f, 0f), LayerMask.GetMask("Wall"));
-        Debug.DrawLine(start + new Vector2(1.5f, 0f), start + new Vector2(1.6f, 0f), Color.red);
-        if (infoNext.collider != null)
-        {
-            Debug.Log(infoNext.collider.gameObject.name);
-            myDir = Vector2.zero;
-        }
-        else
-        {
-            myDir = Vector2.right;
-        }
+
     }
+
 
 }

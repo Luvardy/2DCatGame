@@ -36,8 +36,6 @@ public class ArrowManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(isEditing);
-        Debug.Log("isSelect:" + isSelectMode);
         if(Input.GetKeyDown(KeyCode.K))
         {
             changeEditMode();
@@ -121,11 +119,9 @@ public class ArrowManager : MonoBehaviour
 
         if(!ShowCard.disapear)
         {
-            Debug.Log("FirstStep");
             if(isEditing)
             {
                 canPlace.gameObject.SetActive(false);
-                Debug.Log("SecondStep");
                 GridManager.instance.DestoryNearKing();
                 firstTime = true;
             }
@@ -134,7 +130,6 @@ public class ArrowManager : MonoBehaviour
                 if(firstTime)
                 {
                     canPlace.gameObject.SetActive(true);
-                    Debug.Log("ShowCanPlace");
                     GridManager.instance.ShowNearKing(canPlace);
                     firstTime = false;
                 }
@@ -143,15 +138,12 @@ public class ArrowManager : MonoBehaviour
         else
         { 
             canPlace.gameObject.SetActive(false);
-            Debug.Log("SecondStep");
             GridManager.instance.DestoryNearKing();
             firstTime = true;
         }
 
         if (isSelectMode)
         {
-            Debug.Log("I am running" + clickToShowArrow);
-
             if(time <= delayTime)
             {
                 time += Time.deltaTime;

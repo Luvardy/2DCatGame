@@ -13,6 +13,10 @@ public class GridManager : MonoBehaviour
 
     public GameObject initPos1;
     public GameObject initPos2;
+    public GameObject initPos3;
+    public GameObject initPos4;
+    public GameObject initPos5;
+    public GameObject initPos6;
 
 
     public GameObject PlaceRange;
@@ -24,10 +28,13 @@ public class GridManager : MonoBehaviour
         {
             instance = this;
         }
-        CreateGridsBaseGrid(initPos1,20,6);
-        CreateGridBaseColl(initPos1,20,6);
         CreateGridsBaseGrid(initPos2, 40, 6);
         CreateGridBaseColl(initPos2, 40, 6);
+
+        CreateGridsBaseGrid(initPos4, 18, 13);
+        CreateGridBaseColl(initPos4, 18, 13);
+        CreateGridsBaseGrid(initPos6, 9, 10);
+        CreateGridBaseColl(initPos6, 9, 10);
 
     }
 
@@ -35,10 +42,6 @@ public class GridManager : MonoBehaviour
     {
         CheckCanPlace();
         Debug.DrawLine(GetGridPointByMouse(), Vector2.right);
-        if (Input.GetMouseButton(0))
-        {
-            print(GetGridPointByMouse());
-        }
     }
 
 
@@ -175,7 +178,6 @@ public class GridManager : MonoBehaviour
         {
             if (info.collider.gameObject.tag == "Enemy" || info.collider.gameObject.tag == "Wall")
             {
-                Debug.Log("FindEnemy");
                 return false;
             }
             else

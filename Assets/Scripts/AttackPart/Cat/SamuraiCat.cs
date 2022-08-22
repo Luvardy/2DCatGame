@@ -17,4 +17,43 @@ public class SamuraiCat : CatBase
         State = CatState.Move;
         PlayerManager.instance.CatNeedCost(catCost);
     }
+
+    protected override void MoveCat()
+    {
+        base.MoveCat();
+
+        if (myDir == Vector2.right)
+        {
+            animator.SetBool("WalkRight", true);
+        }
+        else
+        {
+            animator.SetBool("WalkRight", false);
+        }
+        if (myDir == Vector2.left)
+        {
+            animator.SetBool("WalkLeft", true);
+        }
+        else
+        {
+            animator.SetBool("WalkLeft", false);
+        }
+        if (myDir == Vector2.up)
+        {
+            animator.SetBool("WalkUp", true);
+        }
+        else
+        {
+            animator.SetBool("WalkUp", false);
+        }
+        if (myDir == Vector2.down)
+        {
+            animator.SetBool("WalkDown", true);
+        }
+        else
+        {
+            animator.SetBool("WalkDown", false);
+        }
+
+    }
 }

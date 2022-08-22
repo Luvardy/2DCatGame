@@ -17,17 +17,21 @@ public class KingMove : MonoBehaviour
 
     private float leftTime = .1f;
 
-    private float borderUp = -0.07f;
-    private float borderDown = -2.46f;
-
     public static KingMove instance;
 
     private bool isOnSpite = false;
     private bool isAttackState = false;
     private bool isHurtState = false;
+    private bool isPushing = false;
+
+    public AudioClip move;
+    public AudioClip attacked;
+    public AudioClip calling;
+    public AudioClip pushing;
 
     protected SpriteRenderer spriteRenderer;
     protected Animator animator;
+
     void Start()
     {
         maxHp = hp;
@@ -46,6 +50,8 @@ public class KingMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(myDirHor + ":Hor Ver: " + myDirVer);
+
         DetectSpite();
         DetectEnemy();
 
@@ -79,17 +85,19 @@ public class KingMove : MonoBehaviour
 
         RaycastHit2D checkUpLeft = Physics2D.Linecast(start + new Vector2(-0.15f, 0f), start + new Vector2(-0.15f, 0.3f), LayerMask.GetMask("Wall"));
         RaycastHit2D checkUpRight = Physics2D.Linecast(start + new Vector2(0.15f, 0f), start + new Vector2(0.15f, 0.3f), LayerMask.GetMask("Wall"));
-        RaycastHit2D checkUp = Physics2D.Linecast(start, start + new Vector2(0f, 0.3f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkUp = Physics2D.Linecast(start, start + new Vector2(0f, 0.3f), LayerMask.GetMask("PushableBox"));
 
         RaycastHit2D checkDownLeft = Physics2D.Linecast(start + new Vector2(-0.15f,0f), start + new Vector2(-0.15f, -0.5f), LayerMask.GetMask("Wall"));
         RaycastHit2D checkDownRight = Physics2D.Linecast(start + new Vector2(0.15f, 0f), start + new Vector2(0.15f, -0.5f), LayerMask.GetMask("Wall"));
-        RaycastHit2D checkDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.5f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkDown = Physics2D.Linecast(start, start + new Vector2(0f, -0.55f), LayerMask.GetMask("PushableBox"));
 
         RaycastHit2D checkRightDown = Physics2D.Linecast(start + new Vector2(0f,-0.22f), start + new Vector2(0.5f,-0.22f), LayerMask.GetMask("Wall"));
         RaycastHit2D checkRightUp = Physics2D.Linecast(start + new Vector2(0f,0.22f), start + new Vector2(0.5f,0.22f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkRight = Physics2D.Linecast(start + new Vector2(0f, 0f), start + new Vector2(0.5f, 0f), LayerMask.GetMask("PushableBox"));
 
         RaycastHit2D checkLeftDown = Physics2D.Linecast(start + new Vector2(0,-0.22f), start + new Vector2(-0.3f, -0.22f), LayerMask.GetMask("Wall"));
         RaycastHit2D checkLeftUp = Physics2D.Linecast(start + new Vector2(0, 0.22f), start + new Vector2(-0.3f, 0.22f), LayerMask.GetMask("Wall"));
+        RaycastHit2D checkLeft = Physics2D.Linecast(start + new Vector2(0, 0.11f), start + new Vector2(-0.3f, 0.11f), LayerMask.GetMask("PushableBox"));
 
         Debug.DrawLine(start + new Vector2(-0.15f, 0f), start + new Vector2(-0.15f, 0.3f), Color.red);
         Debug.DrawLine(start + new Vector2(0.15f, 0f), start + new Vector2(0.15f, 0.3f), Color.red);
@@ -104,15 +112,68 @@ public class KingMove : MonoBehaviour
 
         Debug.DrawLine(start + new Vector2(0, -0.22f), start + new Vector2(-0.3f, -0.22f), Color.red);
         Debug.DrawLine(start + new Vector2(0, 0.22f), start + new Vector2(-0.3f, 0.22f), Color.red);
+        Debug.DrawLine(start + new Vector2(0, 0.11f), start + new Vector2(-0.3f, 0.11f), Color.red);
 
 
+
+        if (myDirHor == Vector2.zero && myDirVer == new Vector2(0f, -1f))
         {
-
+            if (checkDown.collider != null)
+            {
+                isPushing = true;
+                checkDown.collider.gameObject.GetComponent<PushBox>().isPushed(myDirHor + myDirVer, moveSpeed);
+            }
         }
+        else if (myDirHor == Vector2.zero && myDirVer == new Vector2(0f, 1f))
+        {
+            if (checkUp.collider != null)
+            {
+                isPushing = true;
+                checkUp.collider.gameObject.GetComponent<PushBox>().isPushed(myDirHor + myDirVer, moveSpeed);
+            }
+        }
+        else if (myDirVer == Vector2.zero && myDirHor == new Vector2(1f, 0f))
+        {
+            if (checkRight.collider != null)
+            {
+                isPushing = true;
+                checkRight.collider.gameObject.GetComponent<PushBox>().isPushed(myDirHor + myDirVer, moveSpeed);
+            }
+        }
+        else if (myDirVer == Vector2.zero && myDirHor == new Vector2(-1f, 0f))
+        {
+            if (checkLeft.collider != null)
+            {
+                isPushing = true;
+                checkLeft.collider.gameObject.GetComponent<PushBox>().isPushed(myDirHor + myDirVer, moveSpeed);
+            }
+        }
+        else
+        {
+            isPushing = false;
+        }
+
+        if (isPushing)
+        {
+            moveSpeed = 2f;
+            if (!GetComponent<AudioSource>().isPlaying)
+            {
+                SoundManager.instance.PlaySingle(pushing);
+            }
+        }
+        else
+        {
+            moveSpeed = 4f;
+        }
+
         if (Input.GetKey(KeyCode.A))
         {
             if (checkLeftUp.collider == null && checkLeftDown.collider == null)
             {
+                if (!GetComponent<AudioSource>().isPlaying)
+                {
+                    SoundManager.instance.PlaySingle(move);
+                }
                 myDirHor = Vector2.left;
                 animator.SetBool("walkLeft", true);
                 transform.Translate(myDirHor * moveSpeed * Time.deltaTime);
@@ -127,6 +188,10 @@ public class KingMove : MonoBehaviour
         {
             if (checkRightUp.collider == null && checkRightDown.collider == null)
             {
+                if(!GetComponent<AudioSource>().isPlaying)
+                {
+                    SoundManager.instance.PlaySingle(move);
+                }
                 myDirHor = Vector2.right;
                 animator.SetBool("walkRight", true);
                 transform.Translate(myDirHor * moveSpeed * Time.deltaTime);
@@ -134,17 +199,25 @@ public class KingMove : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.D))
         {
+            if (!GetComponent<AudioSource>().isPlaying)
+            {
+                SoundManager.instance.PlaySingle(move);
+            }
             myDirHor = Vector2.zero;
             animator.SetBool("walkRight", false);
         }
         if (Input.GetKey(KeyCode.W))
         {
-            if ( checkUpLeft.collider != null || checkUpRight.collider != null || checkUp.collider != null)
+            if (!GetComponent<AudioSource>().isPlaying)
+            {
+                SoundManager.instance.PlaySingle(move);
+            }
+            animator.SetBool("walkUp", true);
+            myDirVer = Vector2.up;
+            if ( checkUpLeft.collider != null || checkUpRight.collider != null)
             {
                 return;
             }
-            myDirVer = Vector2.up;
-            animator.SetBool("walkUp", true);
             transform.Translate(myDirVer * moveSpeed * Time.deltaTime);
         }
         if (Input.GetKeyUp(KeyCode.W))
@@ -154,12 +227,16 @@ public class KingMove : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.S))
         {
-            if (checkDownLeft.collider != null || checkDownRight.collider != null || checkDown.collider != null)
+            if (!GetComponent<AudioSource>().isPlaying)
             {
-                return;
+                SoundManager.instance.PlaySingle(move);
             }
             myDirVer = Vector2.down;
             animator.SetBool("walkDown", true);
+            if (checkDownLeft.collider != null || checkDownRight.collider != null)
+            {
+                return;
+            }
             transform.Translate(myDirVer * moveSpeed * Time.deltaTime);
         }
         if (Input.GetKeyUp(KeyCode.S))
@@ -167,7 +244,10 @@ public class KingMove : MonoBehaviour
             myDirVer = Vector2.zero;
             animator.SetBool("walkDown", false);
         }
+
+
     }
+
 
     IEnumerator GetHitPos(Vector2 dir)
     {
@@ -200,6 +280,11 @@ public class KingMove : MonoBehaviour
             Debug.Log("open");
             WallSwitch _switch = info.collider.gameObject.GetComponent<WallSwitch>();
             _switch.SwitchOn();
+        }
+        else if (info.collider!= null && info.collider.gameObject.tag == "Switch2")
+        {
+            Debug.Log("Switch2 Open");
+            WallSwitch2 _switch = info.collider.gameObject.GetComponent<WallSwitch2>();
         }
     }
 
@@ -254,6 +339,7 @@ public class KingMove : MonoBehaviour
 
     public void Hurt(float hurtValue)
     {
+        SoundManager.instance.PlaySingle(attacked);
         isHurtState = true;
         hp -= hurtValue;
         UIManager.instance.HpChange(hp / maxHp);
@@ -291,4 +377,5 @@ public class KingMove : MonoBehaviour
         spriteRenderer.color = Color.white;
         if (fun != null) fun();
     }
+
 }

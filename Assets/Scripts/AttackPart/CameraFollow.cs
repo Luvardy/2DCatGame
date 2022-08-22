@@ -73,23 +73,23 @@ public class CameraFollow : MonoBehaviour
 
     private void CameraView()
     {
-        if(Input.mousePosition.x > Screen.width)
+        if(Input.mousePosition.x >= Screen.width - 1f)
         {
-            if(transform.position.x < target.transform.position.x + 30f)
+            if(transform.position.x < target.transform.position.x + 10f)
                 transform.Translate(viewSpeed * Time.deltaTime , 0f, 0f);
         }
-        if(Input.mousePosition.x < 0)
+        if(Input.mousePosition.x <= 0 + 1f)
         {
-            if(transform.position.x > target.transform.position.x - 20f)
+            if(transform.position.x > target.transform.position.x + 3f)
                 transform.Translate(-viewSpeed * Time.deltaTime, 0f, 0f);
         }
 
-        if (Input.mousePosition.y > Screen.height)
+        if (Input.mousePosition.y >= Screen.height -1f)
         {
             if (transform.position.y < target.transform.position.y + 3f)
                 transform.Translate(0f, viewSpeed * Time.deltaTime, 0f);
         }
-        if (Input.mousePosition.y < 0)
+        if (Input.mousePosition.y <= 0 +1f)
         {
             if (transform.position.y > target.transform.position.y - 1f)
                 transform.Translate(0f, -viewSpeed * Time.deltaTime, 0f);

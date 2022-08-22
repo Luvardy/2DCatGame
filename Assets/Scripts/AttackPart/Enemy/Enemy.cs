@@ -11,13 +11,14 @@ public class Enemy : MonoBehaviour
     private bool stopDetect = false;
     private bool isThisCat = false;
 
-
+    public AudioClip attack;
+    public AudioClip dead;
 
     GameObject curCat;
 
     private bool isStarted = false;
     SpriteRenderer spriteRenderer;
-    Animator animator;
+    protected Animator animator;
 
     void Find()
     {
@@ -36,6 +37,7 @@ public class Enemy : MonoBehaviour
         if(!stopDetect)
         {
             detectCat();
+            MoveEnemy();
         }
 
     }
@@ -60,14 +62,17 @@ public class Enemy : MonoBehaviour
 
     private void Dead()
     {
-   
+        SoundManager.instance.PlaySingelEnemy(dead);
         stopDetect = true;
         animator.SetBool("Die",true);
         animator.SetBool("Attack", false);
-        gameObject.layer = 1 << 2;
+        Destroy(gameObject.GetComponent<BoxCollider2D>());
 
     }
 
+    protected virtual void MoveEnemy()
+    {
+    }
     public void detectCat()
     {
         Vector2 start = gameObject.transform.position;
@@ -101,6 +106,7 @@ public class Enemy : MonoBehaviour
     {
         while(thisCat.hp > 0 && !stopDetect && isThisCat)
         {
+            SoundManager.instance.PlaySingelEnemy(attack);
             animator.SetBool("Attack", true);
             thisCat.Hurt(attackValue);
             yield return new WaitForSeconds(1.5f);
