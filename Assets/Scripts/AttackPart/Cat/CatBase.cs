@@ -28,6 +28,10 @@ public class CatBase : MonoBehaviour
     public float attackValue;
     public float catSpeed;
 
+    //计时器
+    private float leftTime = 1f;
+    private bool returning = true;
+
     public Vector2 myDir = Vector2.right;
 
     public GameObject currCat;
@@ -145,18 +149,22 @@ public class CatBase : MonoBehaviour
             }
             if (infoWallRight.collider != null || infoWallLeft.collider != null || infoWallDown.collider != null || infoWallUp.collider != null)
             {
+                Vector2 pos = KingMove.instance.GetKingPos();
                 myDir = Vector2.zero;
+                returnCat(pos);
             }
             transform.Translate(myDir * catSpeed * Time.deltaTime);
-        }
-        else if (infoWallRight.collider != null || infoWallLeft.collider != null|| infoWallDown.collider != null || infoWallUp.collider != null)
+            }
+            else if (infoWallRight.collider != null || infoWallLeft.collider != null|| infoWallDown.collider != null || infoWallUp.collider != null)
             {
+                Vector2 pos = KingMove.instance.GetKingPos();
                 myDir = Vector2.zero;
+                returnCat(pos);
             }
-        else
-        {
-            transform.Translate(myDir * catSpeed * Time.deltaTime);
-        }
+            else
+            {
+                transform.Translate(myDir * catSpeed * Time.deltaTime);
+             }
     }
 
     private void checkMoveWay(Vector2 dir)
@@ -340,4 +348,36 @@ public class CatBase : MonoBehaviour
 
     // 创建一个虚基类
     protected virtual void OnInitForPlace() { }
+
+    private void returnCat(Vector2 pos)
+    {
+        if(leftTime > 0f )
+        {
+            leftTime -= Time.deltaTime;
+        }
+        else
+        {
+            Debug.Log("return!");
+            if(returning)
+            {
+                PlayerManager.instance.CatPayBack(catCost);
+                returning = false;
+            }
+            StartCoroutine(DoFly(pos));
+
+        }
+    }
+
+    IEnumerator DoFly(Vector2 pos)
+    {
+        Vector3 direction = (pos - (Vector2)transform.position).normalized;
+        while (Vector3.Distance(pos, transform.position) > 0.5f)
+        {
+            yield return new WaitForSeconds(0.01f);
+            transform.Translate(direction * Time.deltaTime /0.1f); // 往这个方向移动
+        }
+        Destroy(gameObject);
+        returning = true;
+        leftTime = 1f;
+    }
 }

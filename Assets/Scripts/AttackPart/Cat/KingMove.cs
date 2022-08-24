@@ -5,7 +5,6 @@ using UnityEngine.Events;
 
 public class KingMove : MonoBehaviour
 {
-    public static bool canCallCat = false;
 
     public float moveSpeed = 0.5f;
     public float hp = 200f;
@@ -22,6 +21,7 @@ public class KingMove : MonoBehaviour
     private bool isOnSpite = false;
     private bool isAttackState = false;
     private bool isHurtState = false;
+    public static bool canCallCat = false;
     private bool isPushing = false;
 
     public AudioClip move;
@@ -163,7 +163,12 @@ public class KingMove : MonoBehaviour
         }
         else
         {
-            moveSpeed = 4f;
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                moveSpeed = 6f;
+            }
+            else
+                moveSpeed = 4f;
         }
 
         if (Input.GetKey(KeyCode.A))
@@ -286,6 +291,7 @@ public class KingMove : MonoBehaviour
             Debug.Log("Switch2 Open");
             WallSwitch2 _switch = info.collider.gameObject.GetComponent<WallSwitch2>();
         }
+
     }
 
     private void Attack(GameObject enemy)
@@ -301,6 +307,8 @@ public class KingMove : MonoBehaviour
         while (thisEnemy.hp > 0)
         {
             Hurt(thisEnemy.hp);
+            isHurtState = true;
+            StartCoroutine(GetHitPos(myDirVer + myDirHor));
             thisEnemy.Hurt(attackValue);
             yield return new WaitForSeconds(0.2f);
         }
@@ -322,16 +330,16 @@ public class KingMove : MonoBehaviour
         }
         else if(info.collider != null && info.collider.gameObject.tag == "Boom")
         {
-            Hurt(150);
-            Destroy(info.collider.gameObject);
+            Hurt(1);
         }
-        else if(info.collider != null && info.collider.gameObject.tag == "CallPlace")
+        else if (info.collider != null && info.collider.gameObject.tag == "Heal")
         {
-            canCallCat = true;
+            hp += 50f;
+            UIManager.instance.HpChange(hp / maxHp);
+            Destroy(info.collider.gameObject);
         }
         else
         {
-            canCallCat = false;
             StopCoroutine("StepOnSpite");
             isOnSpite = false;
         }
@@ -340,14 +348,13 @@ public class KingMove : MonoBehaviour
     public void Hurt(float hurtValue)
     {
         SoundManager.instance.PlaySingle(attacked);
-        isHurtState = true;
         hp -= hurtValue;
         UIManager.instance.HpChange(hp / maxHp);
-        StartCoroutine(GetHitPos(myDirVer + myDirHor));
         StartCoroutine(ColorEF(0.2f, new Color(0.5f, 0.5f, 0.5f), 0.05f, null));
         Debug.Log("i am hurt miao" + hp);
         if(hp < 0.01f)
         {
+            hp = 0f;
             GameManager.instance.GameOver();
         }
     }

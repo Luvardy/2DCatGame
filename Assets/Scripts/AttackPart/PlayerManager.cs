@@ -40,4 +40,10 @@ public class PlayerManager : MonoBehaviour
     {
         CatNum -= cost;
     }
+
+    public void CatPayBack(int back)
+    {
+        CatNum += back;
+        Debug.Log("返还" + back);
+    }
 }

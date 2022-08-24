@@ -80,18 +80,18 @@ public class CameraFollow : MonoBehaviour
         }
         if(Input.mousePosition.x <= 0 + 1f)
         {
-            if(transform.position.x > target.transform.position.x + 3f)
+            if(transform.position.x > target.transform.position.x -1f)
                 transform.Translate(-viewSpeed * Time.deltaTime, 0f, 0f);
         }
 
         if (Input.mousePosition.y >= Screen.height -1f)
         {
-            if (transform.position.y < target.transform.position.y + 3f)
+            if (transform.position.y < target.transform.position.y + 8f)
                 transform.Translate(0f, viewSpeed * Time.deltaTime, 0f);
         }
         if (Input.mousePosition.y <= 0 +1f)
         {
-            if (transform.position.y > target.transform.position.y - 1f)
+            if (transform.position.y > target.transform.position.y - 3f)
                 transform.Translate(0f, -viewSpeed * Time.deltaTime, 0f);
         }
     }

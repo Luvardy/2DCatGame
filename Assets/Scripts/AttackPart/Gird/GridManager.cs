@@ -28,9 +28,12 @@ public class GridManager : MonoBehaviour
         {
             instance = this;
         }
+        CreateGridsBaseGrid(initPos1,20,6);
+        CreateGridBaseColl(initPos1,20,6);
         CreateGridsBaseGrid(initPos2, 40, 6);
         CreateGridBaseColl(initPos2, 40, 6);
-
+        CreateGridsBaseGrid(initPos3, 4, 1);
+        CreateGridBaseColl(initPos3, 4, 1);
         CreateGridsBaseGrid(initPos4, 18, 13);
         CreateGridBaseColl(initPos4, 18, 13);
         CreateGridsBaseGrid(initPos6, 9, 10);

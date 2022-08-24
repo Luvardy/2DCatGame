@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     public Sprite inEdit;
     public Sprite OutEdit;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,5 +55,10 @@ public class UIManager : MonoBehaviour
         {
             buttonImg.sprite = inEdit;
         }
+    }
+
+    public Vector2 GetCatNumPos()
+    {
+        return unitCatNum.transform.position;
     }
 }

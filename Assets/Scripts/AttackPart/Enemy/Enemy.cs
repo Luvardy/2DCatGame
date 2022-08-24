@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     private bool isAttackState = false;
     private bool stopDetect = false;
     private bool isThisCat = false;
+    private bool isOnSpite;
 
     public AudioClip attack;
     public AudioClip dead;
@@ -36,8 +37,9 @@ public class Enemy : MonoBehaviour
         }
         if(!stopDetect)
         {
-            detectCat();
+            DetectCat();
             MoveEnemy();
+            DetectSpite();
         }
 
     }
@@ -73,7 +75,7 @@ public class Enemy : MonoBehaviour
     protected virtual void MoveEnemy()
     {
     }
-    public void detectCat()
+    public virtual void DetectCat()
     {
         Vector2 start = gameObject.transform.position;
         RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(-.3f, 0f), LayerMask.GetMask("Cat"));
@@ -96,13 +98,51 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void DetectSpite()
+    {
+        Vector2 start = transform.position;
+        RaycastHit2D info = Physics2D.Linecast(start, start + new Vector2(0f, -0.5f), LayerMask.GetMask("Trap"));
+        Debug.DrawLine(start, start + new Vector2(0f, -0.5f), Color.red);
+        if (info.collider != null)
+        {
+            Debug.Log(info.collider.gameObject.name);
+        }
+        if (info.collider != null && info.collider.gameObject.tag == "Spite")
+        {
+            if (isOnSpite) return;
+            StartCoroutine("StepOnSpite");
+        }
+        else if (info.collider != null && info.collider.gameObject.tag == "Boom")
+        {
+            Hurt(150);
+            Destroy(info.collider.gameObject);
+        }
+        else
+        {
+            StopCoroutine("StepOnSpite");
+            isOnSpite = false;
+        }
+    }
+
+    IEnumerator StepOnSpite()
+    {
+        isOnSpite = true;
+        while (hp > 0)
+        {
+            Hurt(10);
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+
+
     private void Attack(GameObject cat)
     {
         isAttackState = true;
         CatBase thisCat = cat.gameObject.GetComponent<CatBase>();
         StartCoroutine(DoHurt(thisCat));
     }
-    IEnumerator DoHurt(CatBase thisCat)
+     IEnumerator DoHurt(CatBase thisCat)
     {
         while(thisCat.hp > 0 && !stopDetect && isThisCat)
         {

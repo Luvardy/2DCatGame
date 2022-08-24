@@ -8,8 +8,13 @@ public class HitBox : MonoBehaviour
 {
     private float hp;
     private float damage;
+
+    public Sprite broken;
     public AudioClip digging;
     SpriteRenderer spriteRenderer;
+
+    public GameObject lightUpPre;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,10 +33,15 @@ public class HitBox : MonoBehaviour
     {
         Debug.Log(Vector2.Distance(KingMove.instance.GetKingPos(), transform.position));
 
-        if(Input.GetMouseButtonDown(0) && Vector2.Distance(KingMove.instance.GetKingPos(), transform.position) <= 2f)
+        if(Input.GetMouseButtonDown(0) && Vector2.Distance(KingMove.instance.GetKingPos(), transform.position) <= 3f)
         {
             if(hp>0.01f)
             {
+                if(hp < 50)
+                {
+                    if(broken != null)
+                        spriteRenderer.sprite = broken;
+                }
                 SoundManager.instance.PlaySingle(digging);
                 hp -= damage;
                 StartCoroutine(ColorEF(0.2f, new Color(0.5f, 0.5f, 0.5f), 0.05f, null));
@@ -39,6 +49,8 @@ public class HitBox : MonoBehaviour
             }
             else
             {
+                if(lightUpPre != null)
+                    lightUpPre.gameObject.SetActive(true);
                 Destroy(gameObject);
             }
         }
