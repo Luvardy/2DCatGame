@@ -35,7 +35,7 @@ public class LongCat : CatBase
         RaycastHit2D infoNextRight = Physics2D.Linecast(start + new Vector2(1.5f, 0f), start + new Vector2(1.6f, 0f), 1 << 9 | 1 << 8);
         RaycastHit2D infoNextLeft = Physics2D.Linecast(start + new Vector2(-1.5f, 0f), start + new Vector2(-1.6f, 0f), 1 << 9 | 1 << 8);
         RaycastHit2D infoNextUp = Physics2D.Linecast(start + new Vector2(0f, 1.5f), start + new Vector2(0f, 1.6f), 1 << 9 | 1 << 8);
-        RaycastHit2D infoNextDown = Physics2D.Linecast(start + new Vector2(0f, 1.6f), start + new Vector2(0f, -1.6f), 1 << 9 | 1 << 8);
+        RaycastHit2D infoNextDown = Physics2D.Linecast(start + new Vector2(0f, -1.5f), start + new Vector2(0f, -1.6f), 1 << 9 | 1 << 8);
 
         RaycastHit2D infoWallRight = Physics2D.Linecast(start, start + new Vector2(0.3f, 0f),1<<9 |1 << 8);
         RaycastHit2D infoWallLeft = Physics2D.Linecast(start, start + new Vector2(-0.3f, 0f),1<<9 |1 << 8);
@@ -52,7 +52,10 @@ public class LongCat : CatBase
         Debug.DrawLine(start, start + new Vector2(0f, 0.4f), Color.blue);
         Debug.DrawLine(start, start + new Vector2(0f, -0.4f), Color.blue);
 
-        Debug.DrawLine(start + new Vector2(2f, 0f), start + new Vector2(2.1f, 0f), Color.red);
+        Debug.DrawLine(start + new Vector2(1.5f, 0f), start + new Vector2(1.6f, 0f),Color.red);
+        Debug.DrawLine(start + new Vector2(-1.5f, 0f), start + new Vector2(-1.6f, 0f), Color.red);
+        Debug.DrawLine(start + new Vector2(0f, 1.5f), start + new Vector2(0f, 1.6f), Color.red);
+        Debug.DrawLine(start + new Vector2(0f, -1.5f), start + new Vector2(0f, -1.6f), Color.red);
         if (myDir == Vector2.left)
         {
             infoWay = infoWayLeft;
@@ -94,7 +97,9 @@ public class LongCat : CatBase
             if (infoWallRight.collider != null && infoNextRight.collider != null || infoWallLeft.collider != null && infoNextLeft.collider != null
                 || infoWallUp.collider != null && infoNextUp.collider != null || infoWallDown.collider != null && infoNextDown.collider != null)
             {
+                Vector2 pos = KingMove.instance.GetKingPos();
                 myDir = Vector2.zero;
+                returnCat(pos);
             }
             else if (infoWallRight.collider != null && infoNextRight.collider == null || infoWallLeft.collider != null && infoNextLeft.collider == null
                     || infoWallUp.collider != null && infoNextUp.collider == null || infoWallDown.collider != null && infoNextDown.collider == null)
@@ -106,7 +111,9 @@ public class LongCat : CatBase
         else if(infoWallRight.collider != null && infoNextRight.collider != null || infoWallLeft.collider != null && infoNextLeft.collider != null
                 ||infoWallUp.collider != null && infoNextUp.collider != null || infoWallDown.collider != null && infoNextDown.collider != null)
         {
-                myDir = Vector2.zero;
+            Vector2 pos = KingMove.instance.GetKingPos();
+            myDir = Vector2.zero;
+            returnCat(pos);
         }
         else if(infoWallRight.collider != null && infoNextRight.collider == null || infoWallLeft.collider != null && infoNextLeft.collider == null
                 || infoWallUp.collider != null && infoNextUp.collider == null || infoWallDown.collider != null && infoNextDown.collider == null)
@@ -155,7 +162,7 @@ public class LongCat : CatBase
 
     void Jump()
     {
-
+        Debug.Log("我在跳！");
     }
 
 

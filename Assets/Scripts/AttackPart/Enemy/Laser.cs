@@ -28,6 +28,8 @@ public class Laser : MonoBehaviour
     public LayerMask PlatformMask = 0;
     // 距离
     private float distance = 20;
+
+    private bool canShot = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,28 +45,47 @@ public class Laser : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (state == LaserState.StateIdle && AccTime <= 0 && AccTime <= LaunchingTime)
+        if(canShot)
         {
-            animator.SetInteger("state", 1);
-            state = LaserState.StatePlaying;
+            if (state == LaserState.StateIdle && AccTime <= 0 && AccTime <= LaunchingTime)
+            {
+                animator.SetInteger("state", 1);
+                state = LaserState.StatePlaying;
+
+            }
+
+            //cycleTime = IntervalTime + LaunchingTime;
+            if (state == LaserState.StatePlaying && AccTime > LaunchingTime && AccTime <= cycleTime)
+            {
+                animator.SetInteger("state", 0);
+                state = LaserState.StateIdle;
+            }
+
+            AccTime += Time.deltaTime;
+            if (AccTime > cycleTime)
+            {
+                AccTime = 0;
+            }
         }
 
-        //cycleTime = IntervalTime + LaunchingTime;
-        if (state == LaserState.StatePlaying && AccTime > LaunchingTime && AccTime <= cycleTime)
-        {
-            animator.SetInteger("state", 0);
-            state = LaserState.StateIdle;
-        }
-
-        AccTime += Time.deltaTime;
-        if (AccTime > cycleTime)
-        {
-            AccTime = 0;
-        }
         // 获取射线打到的物体
         hitsStorage = Physics2D.Linecast(transform.position, (Vector2)transform.position + (Vector2)transform.right * -3f, 1 << 13 | 1 << 15);
         Debug.DrawLine(transform.position, (Vector2)transform.position + (Vector2)transform.right * -3f, Color.red);
         // 如果射线长度变化才赋值
+        Debug.Log(gameObject.GetComponentInParent<LaserRobot>().hp);
+        if (hitsStorage && gameObject.GetComponentInParent<LaserRobot>().hp >= 0.1f)
+        {
+            canShot = true;
+            gameObject.GetComponentInParent<LaserRobot>().animator.SetBool("Attack", true);
+        }
+        else
+        {
+            gameObject.GetComponentInParent<LaserRobot>().animator.SetBool("Attack", false);
+            canShot = false;
+            animator.SetInteger("state", 0);
+            state = LaserState.StateIdle;
+            AccTime = 0;
+        }
         if (hitsStorage && distance != hitsStorage.distance)
         {
             if (hitsStorage.distance >= 5f)

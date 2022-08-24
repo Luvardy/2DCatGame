@@ -349,7 +349,7 @@ public class CatBase : MonoBehaviour
     // 创建一个虚基类
     protected virtual void OnInitForPlace() { }
 
-    private void returnCat(Vector2 pos)
+    protected void returnCat(Vector2 pos)
     {
         if(leftTime > 0f )
         {

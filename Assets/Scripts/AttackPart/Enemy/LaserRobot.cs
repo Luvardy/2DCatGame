@@ -1,24 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;using UnityEngine.Events;
+using UnityEngine;
 
 public class LaserRobot : Enemy
 {
-
+    protected Vector2 enemyPos;
+    public bool moveUp;
 
     void Start()
     {
-        hp = 30f;
+        HP = 20;
     }
-    void Update()
+
+    protected override void MoveEnemy()
     {
 
-
     }
-
-
-
-
-
-
 }

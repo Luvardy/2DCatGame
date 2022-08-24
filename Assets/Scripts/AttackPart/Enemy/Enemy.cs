@@ -19,10 +19,11 @@ public class Enemy : MonoBehaviour
 
     private bool isStarted = false;
     SpriteRenderer spriteRenderer;
-    protected Animator animator;
+    public Animator animator;
 
     void Find()
     {
+        Debug.Log(111111 + gameObject.name);
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
