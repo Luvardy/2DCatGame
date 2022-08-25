@@ -23,7 +23,7 @@ public class UIManager : MonoBehaviour
         }
 
 
-        unitCatNum = transform.Find("UnitCat/UnitCatNum").GetComponent<Text>();
+        unitCatNum = transform.Find("UnitCat/UnitCatSign/UnitCatNum").GetComponent<Text>();
         hpFill = transform.Find("HP").GetComponent<Image>();
         buttonImg = transform.Find("Card/Button").GetComponent<Image>();
 

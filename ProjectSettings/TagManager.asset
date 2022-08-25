@@ -20,6 +20,7 @@ TagManager:
   - HitBox
   - Switch2
   - Heal
+  - CageCat
   layers:
   - Default
   - TransparentFX

@@ -36,8 +36,8 @@ public class GridManager : MonoBehaviour
         CreateGridBaseColl(initPos3, 4, 1);
         CreateGridsBaseGrid(initPos4, 18, 13);
         CreateGridBaseColl(initPos4, 18, 13);
-        CreateGridsBaseGrid(initPos6, 9, 10);
-        CreateGridBaseColl(initPos6, 9, 10);
+        CreateGridsBaseGrid(initPos6, 9, 14);
+        CreateGridBaseColl(initPos6, 9, 14);
 
     }
 

@@ -23,7 +23,6 @@ public class Enemy : MonoBehaviour
 
     void Find()
     {
-        Debug.Log(111111 + gameObject.name);
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }

@@ -278,6 +278,7 @@ public class KingMove : MonoBehaviour
         //}
         if (info.collider != null && info.collider.gameObject.tag == "Enemy")
         {
+            Debug.Log("FindEnemy!");
             Attack(info.collider.gameObject);
         }
         else if (info.collider != null && info.collider.gameObject.tag == "Switch")
@@ -336,6 +337,11 @@ public class KingMove : MonoBehaviour
         {
             hp += 50f;
             UIManager.instance.HpChange(hp / maxHp);
+            Destroy(info.collider.gameObject);
+        }
+        else if(info.collider != null && info.collider.gameObject.tag == "CageCat")
+        {
+            PlayerManager.instance.CatNeedCost(-5);
             Destroy(info.collider.gameObject);
         }
         else

@@ -16,10 +16,12 @@ public class Arrow : MonoBehaviour
 
     private bool getPathDone = false;
     RaycastHit2D info;
+    Color initColor;
     private void Start()
     {
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         waySign = Resources.Load<GameObject>("Way");
+        initColor = spriteRenderer.color;
     }
 
     private void Update()
@@ -43,16 +45,20 @@ public class Arrow : MonoBehaviour
     // Start is called before the first frame update
     private void InArrow()
     {
-        if(Vector2.Distance(mousePos,(Vector2)transform.position)<=0.3f)
+        if(!isInit)
         {
-            isPicked = true;
-            spriteRenderer.color = new Color(0.5f, 0.5f, 0.5f);
+            if(Vector2.Distance(mousePos,(Vector2)transform.position)<=0.3f)
+            {
+                isPicked = true;
+                spriteRenderer.color = new Color(initColor.r, initColor.b, initColor.g, 1f);
+            }
+            else
+            {
+                isPicked = false;
+                spriteRenderer.color = new Color(initColor.r, initColor.b, initColor.g, .5f);
+            }
         }
-        else
-        {
-            isPicked = false;
-            spriteRenderer.color = new Color(0f,0f,0f,0.5f);
-        }
+
 
     }
 

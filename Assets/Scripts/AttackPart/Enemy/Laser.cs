@@ -17,9 +17,9 @@ public class Laser : MonoBehaviour
     // 持续间隔
     public float IntervalTime = 2.0f;
     // 一个发射周期的时间 = IntervalTime + LaunchingTime
-    private float cycleTime;
+    public float cycleTime;
     // 临时累计时间，一个周期结束后清零
-    private float AccTime = -1.0f;
+    public float AccTime = -0.2f;
     // 射线方向
     private Vector2 rayDirection;
     // 射线碰撞体
@@ -80,7 +80,6 @@ public class Laser : MonoBehaviour
         }
         else
         {
-            gameObject.GetComponentInParent<LaserRobot>().animator.SetBool("Attack", false);
             canShot = false;
             animator.SetInteger("state", 0);
             state = LaserState.StateIdle;
